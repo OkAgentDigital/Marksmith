@@ -51,24 +51,100 @@ npm run dev
 npm run build
 ```
 
-## 📁 Workspace/Vault System
+## 📁 Persistent Vault Indexing System
 
-Marksmith uses a sophisticated workspace system with:
+Marksmith features a robust, production-ready vault indexing system that persists all your documents and their hierarchical structure between sessions.
 
-- **Hierarchical Document Organization**: Tree structure with folders and files
-- **SQLite Database Backend**: Reliable local storage with Knex.js
-- **Version History**: Full document revision tracking
-- **Media Management**: Integrated attachment handling
-- **Cross-Document Linking**: Advanced reference system
+### 🗃️ Core Features
 
-### Database Schema
+- **SQLite Database Backend**: Uses `~/Library/Application Support/marksmith/data.sqlite` for reliable local storage
+- **Hierarchical Organization**: Documents organized in tree structure with parent-child relationships
+- **Workspace Binding**: Each workspace can be linked to a local filesystem folder
+- **Version History**: Complete document revision tracking with restore capability
+- **Media Management**: Integrated attachment handling with document associations
+- **Cross-Document Links**: Advanced reference system between documents
+- **Offline-First**: Full functionality without internet connection
 
-The core schema includes:
+### 🔧 Database Schema
 
-- `space`: Workspaces/vaults with filesystem binding
-- `doc`: Documents with hierarchical structure and metadata
-- `history`: Document version history
-- `file`: Media attachments and assets
+The core schema includes these tables:
+
+#### `space` - Workspaces/Vaults
+- `id`: Unique identifier
+- `name`: Workspace name
+- `writeFolderPath`: Local filesystem path for synchronization
+- `sort`: Ordering position
+- `opt`: Additional workspace options
+
+#### `doc` - Documents
+- `id`: Unique identifier
+- `name`: Document name
+- `spaceId`: Foreign key to workspace (enables multi-workspace support)
+- `parentId`: Hierarchical structure (folder parent)
+- `folder`: Boolean flag (true for folders)
+- `schema`: Document content structure
+- `links`: Document links/references
+- `medias`: Media attachments
+- `sort`: Ordering within folder
+- `deleted`: Soft delete flag (enables trash/restore functionality)
+- `created`, `updated`, `lastOpenTime`: Timestamps
+
+#### `history` - Document Versions
+- `docId`: Foreign key to document
+- `schema`: Historical document content
+- `spaceId`: Workspace reference
+- `created`: Timestamp
+- `links`, `medias`: Historical attachments
+
+#### `file` - Media Attachments
+- `name`: File name (primary key)
+- `spaceId`: Workspace reference
+- `messageId`: Chat message reference (if applicable)
+- `created`, `size`: File metadata
+
+### 🔄 Synchronization System
+
+Marksmith maintains bidirectional synchronization between:
+
+1. **Database ←→ Filesystem**: Documents in workspaces can be synchronized with local folders
+2. **Hierarchy Preservation**: Folder structure is maintained in both database and filesystem
+3. **Conflict Resolution**: Intelligent handling of concurrent changes
+4. **Change Detection**: Automatic detection of external filesystem changes
+
+### 🎯 Key Benefits for uDos Integration
+
+Since Marksmith and uDos share the same document vault format:
+
+- **Direct Compatibility**: Same SQLite schema and indexing approach
+- **Shared Workspaces**: Both apps can access the same vaults seamlessly
+- **Unified Search**: Cross-app document discovery
+- **Consistent Experience**: Same organizational structure across both applications
+
+### 📊 Advanced Features
+
+- **Soft Delete System**: Documents marked as `deleted: 1` instead of being removed, allowing trash/restore functionality
+- **Hierarchical Sorting**: Documents maintain sort order within each folder level
+- **Cross-Document References**: Documents track links to other documents
+- **Media Associations**: Documents maintain relationships with their attachments
+- **Version Diffing**: Ability to compare different versions of documents
+
+### 🔍 Performance Characteristics
+
+- **Instant Loading**: SQLite provides fast access to document metadata
+- **Efficient Search**: Full-text search across all documents
+- **Scalable**: Handles thousands of documents per workspace
+- **Reliable**: ACID-compliant transactions prevent data corruption
+- **Portable**: Single SQLite file can be moved or backed up easily
+
+### 🛠️ Development Notes
+
+The indexing system uses:
+- **Knex.js**: SQL query builder for database operations
+- **Better-SQLite3**: High-performance SQLite driver
+- **MobX**: State management for reactive UI updates
+- **TypeScript**: Type-safe document and workspace models
+
+This system provides a solid foundation that uDos can build upon while maintaining full compatibility with Marksmith's document vaults.
 
 ## 🎨 Features
 
