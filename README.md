@@ -2,9 +2,9 @@
 
 ## Inkdown Editor is a WYSIWYG editor and an LLM dialogue tool, fully compatible with GitHub Flavored Markdown Spec.
 
-## ⚠️ Project Status: Development Paused
+## 🚀 Project Status: Forked and Resumed
 
-> **This project is currently paused and no longer actively maintained.**
+> **This project has been forked and development has resumed.**
 
 | Mac                                                                                                     | Windows                                                                                                   | VsCode                                                                         |
 | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
