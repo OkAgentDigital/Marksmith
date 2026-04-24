@@ -47,7 +47,7 @@ export function ErrorFallback(props: { error: any }) {
           <span
             className={'link underline cursor-pointer'}
             onClick={() => {
-              window.open('https://github.com/1943time/inkdown/issues')
+              window.open('https://github.com/1943time/marksmith/issues')
             }}
           >
             Send report

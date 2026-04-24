@@ -1,11 +1,11 @@
 {
-  "name": "inkdown",
-  "version": "2.0.2",
-  "description": "A writing tool and chat bot fully compatible with markdown",
+  "name": "marksmith",
+  "version": "2.1.1",
+  "description": "A powerful writing tool and document management system with markdown support",
   "main": "./out/main/index.js",
-  "author": "1943time",
+  "author": "OkAgentDigital (originally by 1943time)",
   "license": "AGPL-3.0",
-  "homepage": "https://github.com/1943time/inkdown",
+  "homepage": "https://github.com/OkAgentDigital/marksmith",
   "scripts": {
     "format": "prettier --write .",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
@@ -36,7 +36,8 @@
     "electron-updater": "^6.3.9",
     "knex": "^3.1.0",
     "mime-types": "^2.1.35",
-    "nanoid": "^5.1.4"
+    "nanoid": "^5.1.4",
+    "slate-dom": "^0.114.0"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.6.1",
@@ -79,8 +80,6 @@
     "electron-vite": "^3.1.0",
     "framer-motion": "^12.5.0",
     "gpt-tokenizer": "^2.9.0",
-    "i18next": "^24.2.3",
-    "i18next-browser-languagedetector": "^8.1.0",
     "is-hotkey": "^0.2.0",
     "katex": "^0.16.21",
     "lodash-es": "^4.17.21",
@@ -98,7 +97,6 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-easy-sort": "^1.6.0",
-    "react-i18next": "^15.4.1",
     "react-layout-kit": "^1.9.1",
     "react-markdown": "^9.1.0",
     "react-photo-view": "^1.2.7",

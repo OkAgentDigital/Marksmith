@@ -16,6 +16,10 @@ export default defineConfig({
         '@': resolve('src/renderer/src') // Alias for src folder
       }
     },
+    server: {
+      port: 5174,
+      strictPort: true
+    },
     build: {
       minify: true,
       cssMinify: true,

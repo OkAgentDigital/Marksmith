@@ -1,5 +1,5 @@
 appId: bluestone
-productName: Inkdown
+productName: Marksmith
 copyright: 'Copyright © 2023 1943dejavu@gmail.com'
 directories:
   buildResources: build
@@ -7,9 +7,9 @@ directories:
 afterSign: scripts/notarize.js
 afterPack: './scripts/afterPack.js'
 protocols:
-  name: inkdown deeplink
+  name: marksmith deeplink
   schemes:
-    - inkdown
+    - marksmith
 files:
   - '!**/.vscode/*'
   - '!**/.cursor/*'
@@ -28,7 +28,7 @@ files:
   - '!dist.zip'
 asarUnpack:
   - resources/*
-artifactName: 'Inkdown-${os}-${arch}.${ext}'
+artifactName: 'Marksmith-${os}-${arch}.${ext}'
 fileAssociations:
   ext: md
   role: Editor
@@ -62,7 +62,7 @@ linux:
   maintainer: 1943dejavu
   description: Markdown Editor
   category: Office;Markdown
-  executableName: Inkdown
+  executableName: Marksmith
   mimeTypes:
     - text/markdown
     - text/x-markdown;
