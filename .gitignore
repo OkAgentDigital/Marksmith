@@ -18,10 +18,8 @@ build/entitlements.mas.plist
 build/entitlements.mas.loginhelper.plist
 src/renderer/src/share
 mas-builder.yml
-.local/
 .DS_Store
 .VSCodeCounter
 .env
 out
-.cursor.compost/
-.compost/
+.cursor

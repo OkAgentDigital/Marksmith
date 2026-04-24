@@ -1,0 +1,72 @@
+appId: bluestone
+productName: Inkdown
+copyright: 'Copyright © 2023 1943dejavu@gmail.com'
+directories:
+  buildResources: build
+  output: 'dist/${platform}/${arch}'
+afterSign: scripts/notarize.js
+afterPack: './scripts/afterPack.js'
+protocols:
+  name: inkdown deeplink
+  schemes:
+    - inkdown
+files:
+  - '!**/.vscode/*'
+  - '!**/.cursor/*'
+  - '!.env'
+  - '!.VSCodeCounter'
+  - '!.i18nrc.cjs'
+  - '!electron.vite.config.*.mjs'
+  - '!src/*'
+  - '!unpackage/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.npmrc,.js.map,.ts,.eslintignore,.eslintrc.cjs,.prettierignore,LICENSE,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md,postcss.config.js,tailwind.config.js,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  - '!scripts/*'
+  - '!web/*'
+  - '!docs/*'
+  - '!dist.zip'
+asarUnpack:
+  - resources/*
+artifactName: 'Inkdown-${os}-${arch}.${ext}'
+fileAssociations:
+  ext: md
+  role: Editor
+win:
+  verifyUpdateCodeSignature: false
+  sign: false
+  target:
+    - nsis
+nsis:
+  allowElevation: false
+  allowToChangeInstallationDirectory: true
+  oneClick: false
+  perMachine: true
+mac:
+  # identity: null
+  notarize: true
+  entitlementsInherit: build/entitlements.mac.plist
+  minimumSystemVersion: 12.0
+  #  category: public.app-category.productivity
+  hardenedRuntime: true
+  extendInfo:
+    - ElectronTeamID: GPJ86B8H94
+    - NSCameraUsageDescription: Application requests access to the device's camera.
+    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+linux:
+  target:
+    - AppImage
+    - deb
+  maintainer: 1943dejavu
+  description: Markdown Editor
+  category: Office;Markdown
+  executableName: Inkdown
+  mimeTypes:
+    - text/markdown
+    - text/x-markdown;
+npmRebuild: false
+publish:
+  provider: generic
+  url: http://localhost:3000/update
