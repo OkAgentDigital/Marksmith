@@ -1,0 +1,102 @@
+# Structured Roadmap for Marksmith
+version: 1.0.0
+name: "Marksmith Development Roadmap"
+description: "Comprehensive roadmap with milestones, features, and priorities"
+
+# Current State
+current:
+  version: "2.0.3"
+  release_date: "2024-04-19"
+  status: "active development"
+  focus: "Stabilization and feature completion"
+
+# Upcoming Milestones
+milestones:
+  - version: "2.1.0"
+    target_date: "2024-05-15"
+    status: "planning"
+    focus: "Task Management Enhancement"
+    features:
+      - id: "task-view-enhancement"
+        description: "Enhance Task View with advanced filtering and sorting"
+        priority: high
+        status: "in development"
+        related_commits:
+          - "40302e1"
+          - "22e3963"
+      - id: "workspace-improvements"
+        description: "Improve workspace management and UI"
+        priority: medium
+        status: "planned"
+        related_commits:
+          - "601126a"
+          - "fa318d8"
+    
+  - version: "2.2.0"
+    target_date: "2024-06-01"
+    status: "backlog"
+    focus: "Performance and Stability"
+    features:
+      - id: "performance-optimization"
+        description: "Optimize rendering and memory usage"
+        priority: high
+        status: "backlog"
+      - id: "bug-fixes"
+        description: "Address critical bugs and edge cases"
+        priority: high
+        status: "backlog"
+    
+  - version: "3.0.0"
+    target_date: "2024-Q3"
+    status: "long-term"
+    focus: "Major Architecture Upgrade"
+    features:
+      - id: "vault-system-redesign"
+        description: "Redesign vault system for better scalability"
+        priority: high
+        status: "research"
+      - id: "ai-integration"
+        description: "Enhanced AI features and workflows"
+        priority: medium
+        status: "research"
+
+# Feature Backlog
+backlog:
+  - id: "collaboration-features"
+    description: "Real-time collaboration features"
+    priority: medium
+    milestone: "3.0.0"
+  
+  - id: "plugin-system"
+    description: "Extensible plugin architecture"
+    priority: medium
+    milestone: "3.0.0"
+  
+  - id: "mobile-support"
+    description: "Mobile app support"
+    priority: low
+    milestone: "future"
+
+# Technical Debt
+technical_debt:
+  - id: "legacy-code-cleanup"
+    description: "Clean up legacy code from Inkdown fork"
+    priority: medium
+    milestone: "2.2.0"
+  
+  - id: "test-coverage-improvement"
+    description: "Increase test coverage to 90%"
+    priority: high
+    milestone: "2.1.0"
+
+# Dependencies
+dependencies:
+  - id: "electron-update"
+    description: "Update to latest Electron version"
+    priority: medium
+    milestone: "2.2.0"
+  
+  - id: "dependency-audit"
+    description: "Audit and update all dependencies"
+    priority: medium
+    milestone: "2.1.0"

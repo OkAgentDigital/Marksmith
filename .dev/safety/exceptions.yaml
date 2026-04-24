@@ -1,0 +1,13 @@
+# Safety Exceptions
+exceptions:
+  - rule: "no-direct-writes"
+    paths:
+      - ".dev/**"
+      - ".compost/**"
+    reason: "Dev and compost directories are auto-managed"
+  
+  - rule: "test-coverage"
+    paths:
+      - "tests/**"
+      - "examples/**"
+    reason: "Test files and examples may have lower coverage"

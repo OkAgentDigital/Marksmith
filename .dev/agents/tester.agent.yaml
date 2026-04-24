@@ -1,0 +1,17 @@
+# Testing Agent
+name: tester
+model: devstral-2
+temperature: 0.3
+max_tokens: 4096
+
+capabilities:
+  - test_writing
+  - test_execution
+  - coverage_analysis
+  - regression_testing
+
+constraints:
+  - "Achieve minimum 80% coverage"
+  - "Test edge cases"
+  - "Include error handling tests"
+  - "Document test assumptions"

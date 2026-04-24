@@ -1,0 +1,32 @@
+# Dev Workflow Configuration
+version: 1.0.0
+name: "Project Dev Template"
+description: "Standardized development workflow"
+
+# Agent configurations
+agents:
+  codegen:
+    enabled: true
+    model: "devstral-2"
+  tester:
+    enabled: true
+    model: "devstral-2"
+  reviewer:
+    enabled: true
+    model: "devstral-2"
+
+# Flow configurations
+flows:
+  dev_cycle: "flows/dev-cycle.flow.yaml"
+  review: "flows/review.flow.yaml"
+  release: "flows/release.flow.yaml"
+
+# Roadmap
+roadmap:
+  current_milestone: "milestones.yaml"
+  major_plans: "roadmap/major/"
+
+# Safety rules
+safety:
+  rules: "safety/rules.yaml"
+  exceptions: "safety/exceptions.yaml"

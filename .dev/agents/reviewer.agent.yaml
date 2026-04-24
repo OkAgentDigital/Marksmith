@@ -1,0 +1,17 @@
+# Review Agent
+name: reviewer
+model: devstral-2
+temperature: 0.5
+max_tokens: 4096
+
+capabilities:
+  - code_review
+  - security_analysis
+  - performance_analysis
+  - documentation_review
+
+constraints:
+  - "Check for security vulnerabilities"
+  - "Verify test coverage"
+  - "Ensure code follows style guide"
+  - "Review documentation completeness"
