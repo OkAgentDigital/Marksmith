@@ -4,7 +4,7 @@ const fs = require('fs')
 exports.default = async function (context) {
   const resorce =
     os.platform() === 'darwin'
-      ? path.join(context.appOutDir, 'Inkdown.app/Contents/Resources')
+      ? path.join(context.appOutDir, 'Marksmith.app/Contents/Resources')
       : path.join(context.appOutDir, 'resources')
   const onnBin = path.join(resorce, 'app.asar.unpacked/node_modules/onnxruntime-node/bin/napi-v3')
   console.log('onnBin', onnBin)

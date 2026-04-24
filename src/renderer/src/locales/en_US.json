@@ -101,7 +101,7 @@
     }
   },
   "export": {
-    "description": "Inkdown will export to the local folder in <tag>GitHub Flavored Markdown</tag> format. File attachments will be saved in the <tag>.files</tag> folder.",
+    "description": "Marksmith will export to the local folder in <tag>GitHub Flavored Markdown</tag> format. File attachments will be saved in the <tag>.files</tag> folder.",
     "exporting": "Exporting...",
     "fileWritten": "File written.",
     "selectFolder": "Select Folder"
@@ -111,7 +111,7 @@
   "folderName": "Folder Name",
   "folders": "Folders",
   "importFolder": {
-    "autoConvert": ". Inkdown will automatically convert file path links and dependent images.",
+    "autoConvert": ". Marksmith will automatically convert file path links and dependent images.",
     "batchImport": "Batch import markdown files to",
     "cancel": "Cancel",
     "currentWorkspace": "current workspace",

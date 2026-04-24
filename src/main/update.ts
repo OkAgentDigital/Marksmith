@@ -8,7 +8,7 @@ autoUpdater.logger = log
 log.transports.file.level = 'info'
 export const registerUpdate = () => {
   if (app.isPackaged) {
-    const feedUrl = `https://www.inkdown.cn/update/${app.getVersion()}/${os.platform()}/${os.arch()}`
+    const feedUrl = `https://update.marksmith.app/update/${app.getVersion()}/${os.platform()}/${os.arch()}`
     try {
       autoUpdater.setFeedURL({
         provider: 'generic',

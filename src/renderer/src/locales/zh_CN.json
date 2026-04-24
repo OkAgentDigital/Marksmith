@@ -50,7 +50,7 @@
     "import": "导入",
     "batchImport": "批量导入 markdown 文档到",
     "currentWorkspace": "当前工作区",
-    "autoConvert": "。Inkdown 将自动转换文件路径链接和依赖图片。",
+    "autoConvert": "。Marksmith 将自动转换文件路径链接和依赖图片。",
     "openFolder": "打开文件夹",
     "importFiles": "导入文件：",
     "existingIgnored": "已存在的文件路径将被忽略",
@@ -65,7 +65,7 @@
     "image": "图片"
   },
   "export": {
-    "description": "Inkdown将以 <tag>GitHub Flavored Markdown</tag> 格式导出至本机文件夹。 文件附件将保存至 <tag>.files</tag> 文件夹中。",
+    "description": "Marksmith将以 <tag>GitHub Flavored Markdown</tag> 格式导出至本机文件夹。 文件附件将保存至 <tag>.files</tag> 文件夹中。",
     "exporting": "正在导出...",
     "selectFolder": "选择文件夹",
     "fileWritten": "文件已写入。"

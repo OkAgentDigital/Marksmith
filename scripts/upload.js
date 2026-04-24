@@ -18,7 +18,7 @@ async function uploadAllFiles() {
   try {
     const files = fs.readdirSync(distPath)
     for (const file of files) {
-      if (file.match(/^Inkdown.*\..*$/) || file.match(/^latest.*\.yml$/)) {
+      if (file.match(/^Marksmith.*\..*$/) || file.match(/^latest.*\.yml$/)) {
         const ossPath = `release/${process.env.REF_NAME}/${platform}/${arch}/${file}`
         await client.put(ossPath, path.join(distPath, file))
       }

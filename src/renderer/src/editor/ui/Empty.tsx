@@ -20,7 +20,7 @@ export const Empty = observer(() => {
               alt=""
               className={'w-5 h-5 mr-2 dark:shadow-none shadow shadow-gray-300 rounded'}
             />
-            Inkdown
+            Marksmith
           </div>
           <div className={'text-base text-gray-500'}>{t('noOpenFiles')}</div>
           <div

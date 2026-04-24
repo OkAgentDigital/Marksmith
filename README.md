@@ -1,21 +1,64 @@
-<h1><img src="resources/icon.png" width="25"/>Inkdown</h1>
+<h1><img src="resources/icon.png" width="25">Marksmith</h1>
 
-## Inkdown Editor is a WYSIWYG editor and an LLM dialogue tool, fully compatible with GitHub Flavored Markdown Spec.
+## Marksmith Editor
 
-## ⚠️ Project Status: Development Paused
+A WYSIWYG editor and LLM dialogue tool, fully compatible with GitHub Flavored Markdown Spec.
 
-> **This project is currently paused and no longer actively maintained.**
+**Version**: 2.1.0 (Stable Fork)
 
-| Mac                                                                                                     | Windows                                                                                                   | VsCode                                                                         |
-| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| [Arm64](https://www.inkdown.cn/download/darwin/arm64) [X64](https://www.inkdown.cn/download/darwin/x64) |   [Arm64](https://www.inkdown.cn/download/win32/arm64)   [X64](https://www.inkdown.cn/download/win32/x64) | [Market](https://marketplace.visualstudio.com/items?itemName=1943time.inkdown) |
+## 🔄 Fork Information
 
-![](./docs/d1.png)
+This project is a fork of [Inkdown](https://github.com/1943time/inkdown) by 1943time. We would like to express our gratitude to the original developers for their excellent work.
 
-![](./docs/d2.png)
+**Original Project**: [OkAgentDigital/inkdown-ms](https://github.com/OkAgentDigital/inkdown-ms)
 
-### Vs code
+**Fork Maintained By**: [OkAgentDigital](https://github.com/OkAgentDigital)
 
-![](./docs/v1.png)
+## 🚀 Project Status: Active Development
 
-![](./docs/v2.png)
+> **This fork is actively maintained and under development by OkAgentDigital.**
+
+| Platform                                                                                                | Status                                                                                                   |
+| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Mac (Arm64/X64)                                                                                         | 🔧 Development in progress                                                                               |
+| Windows (Arm64/X64)                                                                                     | 🔧 Development in progress                                                                               |
+| Linux                                                                                                   | 🔧 Development in progress                                                                               |
+
+## Features
+
+- ✍️ WYSIWYG Markdown Editor
+- 🤖 LLM Dialogue Integration
+- 📁 File Management
+- 🌐 Cross-platform Support
+- 🎨 Customizable Interface
+
+## Installation
+
+The project is currently in early development. Pre-built binaries will be available soon.
+
+## Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/OkAgentDigital/Marksmith.git
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+## License
+
+This project is licensed under the AGPL-3.0 license. See the [LICENSE](LICENSE) file for details.
+
+## Credits
+
+- Original Inkdown project: [1943time](https://github.com/1943time)
+- Fork maintained by: [OkAgentDigital](https://github.com/OkAgentDigital)
+- Special thanks to all contributors of the original Inkdown project
+
+## Contact
+
+For issues, questions, or contributions, please visit our [GitHub repository](https://github.com/OkAgentDigital/Marksmith).

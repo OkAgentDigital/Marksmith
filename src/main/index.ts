@@ -7,7 +7,7 @@ import './handle'
 import { registerUpdate } from './update'
 app.whenReady().then(async () => {
   await modelReady()
-  electronApp.setAppUserModelId('com.inkdown')
+  electronApp.setAppUserModelId('com.marksmith')
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
