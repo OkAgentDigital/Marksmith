@@ -10,6 +10,17 @@ export function setupApplicationMenu() {
       submenu: [
         { role: 'about' },
         { type: 'separator' },
+        {
+          label: 'Settings...',
+          accelerator: 'Cmd+,',
+          click: () => {
+            const win = BrowserWindow.getAllWindows()[0]
+            if (win) {
+              win.webContents.send('open-settings')
+            }
+          }
+        },
+        { type: 'separator' },
         { role: 'services' },
         { type: 'separator' },
         { role: 'hide' },
@@ -27,6 +38,37 @@ export function setupApplicationMenu() {
     {
       label: 'File',
       submenu: [
+        {
+          label: 'New Vault...',
+          accelerator: 'CmdOrCtrl+N',
+          click: () => {
+            const win = BrowserWindow.getAllWindows()[0]
+            if (win) {
+              win.webContents.send('create-new-vault')
+            }
+          }
+        },
+        {
+          label: 'Import Folder...',
+          accelerator: 'CmdOrCtrl+O',
+          click: () => {
+            const win = BrowserWindow.getAllWindows()[0]
+            if (win) {
+              win.webContents.send('import-folder')
+            }
+          }
+        },
+        {
+          label: 'Import File...',
+          accelerator: 'CmdOrCtrl+Shift+O',
+          click: () => {
+            const win = BrowserWindow.getAllWindows()[0]
+            if (win) {
+              win.webContents.send('import-file')
+            }
+          }
+        },
+        { type: 'separator' },
         process.platform === 'darwin' ? { role: 'close' } : { role: 'quit' }
       ]
     },
