@@ -1,15 +1,15 @@
-import { app, Menu, shell, BrowserWindow } from 'electron'
+import { app, Menu, shell, BrowserWindow, MenuItemConstructorOptions } from 'electron'
 
 export function setupApplicationMenu() {
   const appName = 'Marksmith'
   
-  const template: Electron.MenuItemConstructorOptions[] = [
-    // { role: 'appMenu' }
+  const menuTemplate: MenuItemConstructorOptions[] = [
+    // Application menu (macOS only)
     ...(process.platform === 'darwin' ? [{
       label: appName,
       submenu: [
-        { role: 'about' },
-        { type: 'separator' },
+        { role: 'about' } as MenuItemConstructorOptions,
+        { type: 'separator' } as MenuItemConstructorOptions,
         {
           label: 'Settings...',
           accelerator: 'Cmd+,',
@@ -19,22 +19,22 @@ export function setupApplicationMenu() {
               win.webContents.send('open-settings')
             }
           }
-        },
-        { type: 'separator' },
-        { role: 'services' },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideOthers' },
-        { role: 'unhide' },
-        { type: 'separator' },
+        } as MenuItemConstructorOptions,
+        { type: 'separator' } as MenuItemConstructorOptions,
+        { role: 'services' } as MenuItemConstructorOptions,
+        { type: 'separator' } as MenuItemConstructorOptions,
+        { role: 'hide' } as MenuItemConstructorOptions,
+        { role: 'hideOthers' } as MenuItemConstructorOptions,
+        { role: 'unhide' } as MenuItemConstructorOptions,
+        { type: 'separator' } as MenuItemConstructorOptions,
         { 
           label: 'Quit Marksmith', 
           accelerator: 'CmdOrCtrl+Q',
           click: () => app.quit()
-        }
+        } as MenuItemConstructorOptions
       ]
-    }] : []),
-    // { role: 'fileMenu' }
+    } as MenuItemConstructorOptions] : []),
+    // File menu
     {
       label: 'File',
       submenu: [
@@ -47,7 +47,7 @@ export function setupApplicationMenu() {
               win.webContents.send('create-new-vault')
             }
           }
-        },
+        } as MenuItemConstructorOptions,
         {
           label: 'Import Folder...',
           accelerator: 'CmdOrCtrl+O',
@@ -57,7 +57,7 @@ export function setupApplicationMenu() {
               win.webContents.send('import-folder')
             }
           }
-        },
+        } as MenuItemConstructorOptions,
         {
           label: 'Import File...',
           accelerator: 'CmdOrCtrl+Shift+O',
@@ -67,71 +67,72 @@ export function setupApplicationMenu() {
               win.webContents.send('import-file')
             }
           }
-        },
-        { type: 'separator' },
-        process.platform === 'darwin' ? { role: 'close' } : { role: 'quit' }
+        } as MenuItemConstructorOptions,
+        { type: 'separator' } as MenuItemConstructorOptions,
+        process.platform === 'darwin' ? { role: 'close' } : { role: 'quit' } as MenuItemConstructorOptions
       ]
-    },
-    // { role: 'editMenu' }
+    } as MenuItemConstructorOptions,
+    // Edit menu
     {
       label: 'Edit',
       submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
+        { role: 'undo' } as MenuItemConstructorOptions,
+        { role: 'redo' } as MenuItemConstructorOptions,
+        { type: 'separator' } as MenuItemConstructorOptions,
+        { role: 'cut' } as MenuItemConstructorOptions,
+        { role: 'copy' } as MenuItemConstructorOptions,
+        { role: 'paste' } as MenuItemConstructorOptions,
         ...(process.platform === 'darwin' ? [
-          { role: 'pasteAndMatchStyle' },
-          { role: 'delete' },
-          { role: 'selectAll' },
-          { type: 'separator' },
+          { role: 'pasteAndMatchStyle' } as MenuItemConstructorOptions,
+          { role: 'delete' } as MenuItemConstructorOptions,
+          { role: 'selectAll' } as MenuItemConstructorOptions,
+          { type: 'separator' } as MenuItemConstructorOptions,
           {
             label: 'Speech',
             submenu: [
-              { role: 'startSpeaking' },
-              { role: 'stopSpeaking' }
+              { role: 'startSpeaking' } as MenuItemConstructorOptions,
+              { role: 'stopSpeaking' } as MenuItemConstructorOptions
             ]
-          }
+          } as MenuItemConstructorOptions
         ] : [
-          { role: 'delete' },
-          { type: 'separator' },
-          { role: 'selectAll' }
+          { role: 'delete' } as MenuItemConstructorOptions,
+          { type: 'separator' } as MenuItemConstructorOptions,
+          { role: 'selectAll' } as MenuItemConstructorOptions
         ])
       ]
-    },
-    // { role: 'viewMenu' }
+    } as MenuItemConstructorOptions,
+    // View menu
     {
       label: 'View',
       submenu: [
-        { role: 'reload' },
-        { role: 'forceReload' },
-        { role: 'toggleDevTools' },
-        { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' }
+        { role: 'reload' } as MenuItemConstructorOptions,
+        { role: 'forceReload' } as MenuItemConstructorOptions,
+        { role: 'toggleDevTools' } as MenuItemConstructorOptions,
+        { type: 'separator' } as MenuItemConstructorOptions,
+        { role: 'resetZoom' } as MenuItemConstructorOptions,
+        { role: 'zoomIn' } as MenuItemConstructorOptions,
+        { role: 'zoomOut' } as MenuItemConstructorOptions,
+        { type: 'separator' } as MenuItemConstructorOptions,
+        { role: 'togglefullscreen' } as MenuItemConstructorOptions
       ]
-    },
-    // { role: 'windowMenu' }
+    } as MenuItemConstructorOptions,
+    // Window menu
     {
       label: 'Window',
       submenu: [
-        { role: 'minimize' },
-        { role: 'zoom' },
+        { role: 'minimize' } as MenuItemConstructorOptions,
+        { role: 'zoom' } as MenuItemConstructorOptions,
         ...(process.platform === 'darwin' ? [
-          { type: 'separator' },
-          { role: 'front' },
-          { type: 'separator' },
-          { role: 'window' }
+          { type: 'separator' } as MenuItemConstructorOptions,
+          { role: 'front' } as MenuItemConstructorOptions,
+          { type: 'separator' } as MenuItemConstructorOptions,
+          { role: 'window' } as MenuItemConstructorOptions
         ] : [
-          { role: 'close' }
+          { role: 'close' } as MenuItemConstructorOptions
         ])
       ]
-    },
+    } as MenuItemConstructorOptions,
+    // Help menu
     {
       role: 'help',
       submenu: [
@@ -140,24 +141,24 @@ export function setupApplicationMenu() {
           click: async () => {
             await shell.openExternal('https://github.com/OkAgentDigital/marksmith')
           }
-        },
+        } as MenuItemConstructorOptions,
         {
           label: 'Documentation',
           click: async () => {
             await shell.openExternal('https://github.com/OkAgentDigital/marksmith/blob/master/README.md')
           }
-        },
+        } as MenuItemConstructorOptions,
         {
           label: 'Report Issue',
           click: async () => {
             await shell.openExternal('https://github.com/OkAgentDigital/marksmith/issues')
           }
-        }
+        } as MenuItemConstructorOptions
       ]
-    }
+    } as MenuItemConstructorOptions
   ]
 
-  const menu = Menu.buildFromTemplate(template)
+  const menu = Menu.buildFromTemplate(menuTemplate)
   Menu.setApplicationMenu(menu)
   
   // Set the app name for macOS
