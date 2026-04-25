@@ -9,6 +9,10 @@ app/
 electron.vite.config.*.mjs
 mdparser/index.js
 dist
+*.dmg
+*.zip
+*.app
+=======
 web
 build/bluestone.provisionprofile
 build/masDev.provisionprofile
@@ -19,6 +23,7 @@ build/entitlements.mas.loginhelper.plist
 src/renderer/src/share
 mas-builder.yml
 .DS_Store
+.legacy/
 .VSCodeCounter
 .env
 out

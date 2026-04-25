@@ -1,12 +1,39 @@
-# Marksmith macOS Quickstart Guide
+# Marksmith for macOS
 
-Welcome to Marksmith! This guide will help you get started with the macOS version.
+**Marksmith** - A Powerful Writing Tool and Document Management System for macOS
 
-## 📥 Installation
+By OkAgentDigital - Forked with care from Inkdown
 
-### Option 1: Using the DMG Installer (Recommended)
+## 🛠️ Building from Source
 
-1. **Download** the latest `Marksmith-mac-arm64.dmg` from the [releases page](#)
+Since Marksmith is not distributed as a pre-built binary, you'll need to build it locally:
+
+### Prerequisites
+- macOS 10.12 or later
+- Apple Silicon (M1/M2) or Intel Mac with Rosetta 2
+- Node.js v18+ (v24 recommended)
+- npm or yarn
+- Git
+
+### Build Instructions
+
+1. **Clone the repository** (if you haven't already):
+   ```bash
+   git clone https://github.com/OkAgentDigital/marksmith.git
+   cd marksmith
+   ```
+
+2. **Run the build script**:
+   ```bash
+   ./scripts/build-mac.sh
+   ```
+
+3. **Or build manually**:
+   ```bash
+   npm install
+   npm run build
+   npx electron-builder --mac --arm64
+   ```
 2. **Double-click** the DMG file to open it
 3. **Drag** the Marksmith icon to your Applications folder
 4. **Eject** the DMG volume
@@ -41,7 +68,20 @@ Marksmith supports standard macOS keyboard shortcuts:
 - **Cmd+Shift+O**: Import File
 - **Cmd+Q**: Quit Marksmith
 
-## 🎯 Getting Started
+## 🚀 After Building
+
+Once the build completes, you'll find the application in:
+```
+dist/darwin/arm64/Marksmith-mac-arm64.dmg
+```
+
+### Installation
+
+1. **Double-click** the DMG file to open it
+2. **Drag** Marksmith to your Applications folder
+3. **Launch** from Applications or Spotlight
+
+### First Run
 
 1. **Create a Vault**: Use File → New Vault or press Cmd+N
 2. **Import Content**: Use File → Import Folder or File → Import File

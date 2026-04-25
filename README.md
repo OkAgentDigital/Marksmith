@@ -12,6 +12,14 @@ Marksmith is a WYSIWYG editor and document management system, fully compatible w
 
 The current development roadmap focuses on:
 
+## 📜 Legacy & License Compliance
+
+Marksmith is a fork of [Inkdown](https://github.com/1943time/inkdown), originally licensed under AGPL-3.0. 
+
+**📁 Legacy Archive**: The `.legacy/` directory contains archived copies of the original fork for license compliance. See [`.legacy/README.md`](.legacy/README.md) for details.
+
+---
+
 1. **GitHub Publishing Path** - Seamless synchronization with Git repositories
 2. **Feeds/MCP Integration** - Enhanced content aggregation and management
 3. **Schema System** - Custom document types and templates
