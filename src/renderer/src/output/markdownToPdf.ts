@@ -601,7 +601,8 @@ const htmlToPdf = (html: string, options: { pageSize: string }): Promise<Blob> =
                 landscape: false
               })
               .then((data: Uint8Array) => {
-                resolve(new Blob([data], { type: 'application/pdf' }))
+                const uint8Array = new Uint8Array(data.buffer as ArrayBuffer, data.byteOffset, data.byteLength)
+                resolve(new Blob([uint8Array], { type: 'application/pdf' }))
               })
               .catch(reject)
           } else {
