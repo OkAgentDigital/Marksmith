@@ -21,11 +21,13 @@ The current development roadmap focuses on:
 
 ## 📦 Installation
 
-### Prerequisites
+### macOS (Apple Silicon)
 
-- Node.js v18+ (v24 recommended)
-- npm or yarn
-- Git (for source installation)
+**🍎 Download the latest macOS release:**
+- [Marksmith-mac-arm64.dmg](dist/darwin/arm64/Marksmith-mac-arm64.dmg) (Disk Image)
+- [Marksmith-mac-arm64.zip](dist/darwin/arm64/Marksmith-mac-arm64.zip) (ZIP Archive)
+
+See the [macOS Quickstart Guide](MACOS_QUICKSTART.md) for installation instructions.
 
 ### From Source
 
