@@ -4,7 +4,7 @@ import { useStore } from '@/store/store'
 import { SetEditor } from './Editor'
 import { Keyboard } from './Keyboard'
 import { ModelSettings } from './Model'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const Settings = observer(() => {
   const core = useStore()

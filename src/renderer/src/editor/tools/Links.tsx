@@ -6,7 +6,7 @@ import { useCallback, useEffect } from 'react'
 import { Editor, Element, Node, Transforms } from 'slate'
 import { EditorUtils } from '../utils/editorUtils'
 import { ScrollList } from '@/ui/common/ScrollList'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation, Trans } from "@/i18n.mock"
 
 const headIcon = new Map<number, React.ReactNode>([
   [1, <Heading1 size={16} />],

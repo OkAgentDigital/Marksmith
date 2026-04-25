@@ -6,7 +6,7 @@ import { rgba } from 'polished'
 import { CSSProperties, memo, useEffect, useState } from 'react'
 import { Flexbox } from 'react-layout-kit'
 import { CitationItem } from '@lobehub/ui/es/types/citation'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`

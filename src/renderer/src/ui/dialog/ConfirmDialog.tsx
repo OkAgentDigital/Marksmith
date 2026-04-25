@@ -5,7 +5,7 @@ import isHotkey from 'is-hotkey'
 import { useGetSetState } from 'react-use'
 import { useSubject } from '@/hooks/common'
 import { useStore } from '@/store/store'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export function ConfirmDialog() {
   const { t } = useTranslation()

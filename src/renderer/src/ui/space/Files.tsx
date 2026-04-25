@@ -6,7 +6,7 @@ import { Popconfirm } from 'antd'
 import { Download, TicketSlash } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 import { useCallback, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 import { IFile } from 'types/model'
 
 export const SpaceFiles = observer(() => {

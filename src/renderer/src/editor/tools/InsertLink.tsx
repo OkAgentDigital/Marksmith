@@ -12,7 +12,7 @@ import { IPlanet } from '../icons/IPlanet'
 import { isLink, parsePath } from '../utils'
 import { IDoc } from 'types/model'
 import { useLocalState } from '@/hooks/useLocalState'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 type ShowDoc = { doc: IDoc; path: string }
 type ShowAnchor = { doc: IDoc; path: string; value: string }

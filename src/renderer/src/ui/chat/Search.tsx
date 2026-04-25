@@ -9,7 +9,7 @@ import { IEnter } from '@/icons/keyboard/Enter'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { ScrollList } from '../common/ScrollList'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 dayjs.extend(relativeTime)
 const hightText = (text: string, keyword: string) => {

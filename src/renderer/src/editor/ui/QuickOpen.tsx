@@ -9,7 +9,7 @@ import { IEnter } from '@/icons/keyboard/Enter'
 import Command from '@/icons/keyboard/Command'
 import { os } from '@/utils/common'
 import { ScrollList } from '@/ui/common/ScrollList'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const QuickOpen = observer(() => {
   const store = useStore()

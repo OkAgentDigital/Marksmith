@@ -7,7 +7,7 @@ import { EditorUtils } from '../utils/editorUtils'
 import { Replace, X } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 import { useTab } from '@/store/note/TabCtx'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const Search = observer(() => {
   const { t } = useTranslation()

@@ -9,7 +9,7 @@ import { useStore } from '@/store/store'
 import { useLocalState } from '@/hooks/useLocalState'
 import { Webview } from './Webview'
 import { TextHelp } from '@/ui/common/HelpText'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const History = observer((props: { open: boolean; doc?: IDoc; onClose: () => void }) => {
   const store = useStore()

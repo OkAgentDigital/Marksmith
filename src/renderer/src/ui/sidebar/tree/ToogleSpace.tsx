@@ -9,7 +9,7 @@ import { useGetSetState } from 'react-use'
 import { ISpace } from 'types/model'
 import { observer } from 'mobx-react-lite'
 import { ISwitch } from '@/icons/ISwitch'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const SpaceList = observer(
   (props: {

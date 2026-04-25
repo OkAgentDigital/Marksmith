@@ -8,7 +8,7 @@ import { os } from '@/utils/common'
 import { useLocalState } from '@/hooks/useLocalState'
 import isHotkey from 'is-hotkey'
 import { RotateCcw } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 const Item = observer(
   ({ task, labelMap }: { task: string; labelMap: Map<string, string>; refresh: boolean }) => {

@@ -3,7 +3,7 @@ import { useCallback, useRef } from 'react'
 import { useStore } from '@/store/store'
 import { useLocalState } from '@/hooks/useLocalState'
 import { X } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const Tabs = observer(() => {
   const store = useStore()

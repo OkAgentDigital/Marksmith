@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { Ellipsis, MessageSquarePlus, Search } from 'lucide-react'
 import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const Chats = observer(() => {
   const store = useStore()

@@ -4,10 +4,11 @@ import { message, Modal, notification, Space } from 'antd'
 import { Button, ThemeProvider } from '@lobehub/ui'
 import Entry from './ui/Entry'
 import { observer } from 'mobx-react-lite'
+import { useTranslation } from '@/i18n.mock'
 
 
 const App = observer(() => {
-
+  const { t } = useTranslation()
   const [messageApi, contextHolder] = message.useMessage()
   const [modalApi, modalContextHolder] = Modal.useModal()
   const [notifyApi, notifyContextHolder] = notification.useNotification()

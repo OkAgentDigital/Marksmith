@@ -3,7 +3,7 @@ import { CloseOutlined, HistoryOutlined } from '@ant-design/icons'
 import logo from '../../assets/logo.svg'
 import { useStore } from '@/store/store'
 import { FileText } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const Empty = observer(() => {
   const store = useStore()

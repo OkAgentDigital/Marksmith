@@ -26,7 +26,7 @@ import { EditorUtils } from '@/editor/utils/editorUtils'
 import { observer } from 'mobx-react-lite'
 import { useLocalState } from '@/hooks/useLocalState'
 import { getDomRect } from '@/utils/dom'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 import { mb, nid } from '@/utils/common'
 import { fileOpen } from 'browser-fs-access'
 import { isImageModel } from '@/store/llm/data/data'

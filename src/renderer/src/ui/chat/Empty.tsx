@@ -3,7 +3,7 @@ import { GlobalOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { observer } from 'mobx-react-lite'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const ChatEmpty = observer(() => {
   const store = useStore()

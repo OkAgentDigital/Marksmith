@@ -9,7 +9,7 @@ import { useStore } from '@/store/store'
 import { TabStore } from '@/store/note/tab'
 import { File } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const Title = observer(({ tab }: { tab: TabStore }) => {
   const store = useStore()

@@ -13,7 +13,7 @@ import { useGetSetState } from 'react-use'
 import { useTab } from '@/store/note/TabCtx'
 import IMermaid from '../icons/IMermaid'
 import { observer } from 'mobx-react-lite'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 type InsertOptions = {
   label: [string, string]
@@ -536,7 +536,7 @@ export const InsertAutocomplete = observer(() => {
                 `}
                   >
                     {el.icon}
-                    <span>{el.label[i18n.language === 'zh' ? 0 : 1]}</span>
+                    <span>{el.label[1]}</span>
                   </div>
                 ))}
               </div>

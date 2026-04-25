@@ -10,7 +10,7 @@ import { ChatSearch } from './Search'
 import { os } from '@/utils/common'
 import { ChatNotes } from './ChatNotes'
 import { Dropdown } from 'antd'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const Chat = observer(() => {
   const store = useStore()

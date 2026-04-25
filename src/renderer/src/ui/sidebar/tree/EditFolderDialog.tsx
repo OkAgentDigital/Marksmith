@@ -9,7 +9,7 @@ import { Dialog } from '@/ui/dialog/Dialog'
 import { FolderClosed } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 import { delayRun } from '@/utils/common'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const EditFolderDialog = observer(() => {
   const { t } = useTranslation()

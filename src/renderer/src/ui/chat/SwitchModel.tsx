@@ -8,7 +8,7 @@ import { useMemo } from 'react'
 import { OpenAI } from '@lobehub/icons'
 import { useSetState } from 'react-use'
 import { observer } from 'mobx-react-lite'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const SwitchModel = observer((props: { maxWidth?: number }) => {
   const store = useStore()

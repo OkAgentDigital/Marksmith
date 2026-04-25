@@ -7,7 +7,7 @@ import { getOffsetTop } from '../../utils/dom'
 import { TabStore } from '@/store/note/tab'
 import { observer } from 'mobx-react-lite'
 import { useSubject } from '@/hooks/common'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 type Leading = {
   title: string

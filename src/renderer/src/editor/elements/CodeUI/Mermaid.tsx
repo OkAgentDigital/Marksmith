@@ -4,7 +4,7 @@ import { EditorUtils } from '../../utils/editorUtils'
 import { CodeNode } from '@/editor'
 import { useTab } from '@/store/note/TabCtx'
 import { useObserveKey } from '@/hooks/common'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export default function Mermaid(props: { el: CodeNode }) {
   const tab = useTab()

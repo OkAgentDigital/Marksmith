@@ -6,7 +6,7 @@ import { ScrollList } from '../common/ScrollList'
 import { getOffsetLeft } from '@/utils/dom'
 import { useGetSetState } from 'react-use'
 import { Editor, Node, Transforms } from 'slate'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 const width = 300
 export const ChatNotes = observer(() => {

@@ -7,8 +7,7 @@ import { observable, runInAction } from 'mobx'
 import isHotkey from 'is-hotkey'
 import { Editor, Element, Node, Transforms } from 'slate'
 import { EditorUtils } from '@/editor/utils/editorUtils'
-import { getSystemLanguage } from '@/utils/i18n'
-import i18next from 'i18next'
+import i18n, { getSystemLanguage } from "@/i18n.mock"
 import { Mermaid } from 'mermaid'
 
 let mermaid: Mermaid | null = null
@@ -143,9 +142,9 @@ export class SettingsStore extends StructStore<typeof state> {
       }
     })
     if (this.state.language === 'zh') {
-      i18next.changeLanguage('zh')
+      i18n.changeLanguage('zh')
     } else {
-      i18next.changeLanguage('en')
+      i18n.changeLanguage('en')
     }
     this.setState({ ready: true })
     import('mermaid').then((res) => {
@@ -219,7 +218,7 @@ export class SettingsStore extends StructStore<typeof state> {
       this.setCodeOptions('tabSize', value)
     }
     if (key === 'language') {
-      i18next.changeLanguage(value as string)
+      i18n.changeLanguage(value as string)
     }
   }
   async getModels() {

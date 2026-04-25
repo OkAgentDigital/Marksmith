@@ -9,7 +9,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { useTab } from '@/store/note/TabCtx'
 import { getImageData, useSelStatus } from '../utils'
 import { AlignLeft, AlignRight, Download, ScanEye } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 const alignType = new Map([
   ['left', 'justify-start'],

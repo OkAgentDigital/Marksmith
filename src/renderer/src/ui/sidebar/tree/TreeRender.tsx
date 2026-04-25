@@ -5,7 +5,7 @@ import { action } from 'mobx'
 import { Store, useStore } from '@/store/store'
 import { IDoc } from 'types/model'
 import { ChevronRight, FileText, FolderClosed, Plus } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const getClass = (tree: Store, c: IDoc) => {
   if (tree.note.state.selectedDoc?.id === c.id) return 'dark:bg-blue-500/20 bg-blue-500/20'

@@ -10,7 +10,7 @@ import { useGetSetState } from 'react-use'
 import { getFileName } from '@/utils/string'
 import { observer } from 'mobx-react-lite'
 import { runInAction } from 'mobx'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 import { getImageData } from '@/editor/utils'
 
 const fileTypeIconMap = [

@@ -8,7 +8,7 @@ import { useLocalState } from '@/hooks/useLocalState'
 import { useSubject } from '@/hooks/common.js'
 import { FolderInput } from 'lucide-react'
 import { IDoc } from 'types/model'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const ImportFolder = observer(() => {
   const { t } = useTranslation()

@@ -4,7 +4,7 @@ import { ExportOutlined } from '@ant-design/icons'
 import { useStore } from '@/store/store'
 import { FolderDown } from 'lucide-react'
 import { useLocalState } from '@/hooks/useLocalState'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation, Trans } from "@/i18n.mock"
 
 export const ExportSpace = observer(() => {
   const store = useStore()

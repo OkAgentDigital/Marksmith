@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 import { observable } from 'mobx'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 interface DocTree extends Omit<IDoc, 'children'> {
   children?: DocTree[]

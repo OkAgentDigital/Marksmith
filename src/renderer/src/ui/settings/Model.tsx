@@ -11,7 +11,7 @@ import { observer } from 'mobx-react-lite'
 import { useLocalState } from '@/hooks/useLocalState'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { Button, Modal, SortableList } from '@lobehub/ui'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 const ModalForm = observer((props: { open: boolean; id: string | null; onClose: () => void }) => {
   const [form] = Form.useForm()

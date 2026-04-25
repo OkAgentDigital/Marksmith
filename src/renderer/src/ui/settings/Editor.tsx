@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { Checkbox, Radio, Slider } from 'antd'
 import { useStore } from '@/store/store'
 import { TextHelp } from '../common/HelpText'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 import { Select } from '@lobehub/ui'
 
 export const SetEditor = observer(() => {

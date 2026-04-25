@@ -9,7 +9,7 @@ import { useSubject } from '@/hooks/common'
 import { nid } from '@/utils/common'
 import { IWorkspace } from '@/icons/IWorkspace'
 import { Space, Form, Input, Modal, Collapse, Button } from 'antd'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const EditSpace = observer(() => {
   const { t } = useTranslation()

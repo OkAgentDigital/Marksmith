@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 import { Store } from '../store'
 import { nid } from '@/utils/common'
 import { IDoc } from 'types/model'
-import i18next from 'i18next'
+import i18n from "@/i18n.mock"
 
 export interface ImportTree {
   id: string
@@ -85,9 +85,9 @@ export class LocalFile {
   async showInFinder(doc: IDoc) {
     if (!this.saveLocal) {
       this.store.note.openConfirmDialog$.next({
-        title: i18next.t('tip'),
-        description: i18next.t('workspace.bindFolderTip'),
-        okText: i18next.t('workspace.goToSettings'),
+        title: i18n.t('tip'),
+        description: i18n.t('workspace.bindFolderTip'),
+        okText: i18n.t('workspace.goToSettings'),
         okType: 'primary',
         onConfirm: () => {
           this.store.note.openEditSpace$.next(this.store.note.state.currentSpace?.id!)

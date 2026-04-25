@@ -7,7 +7,7 @@ import { useStore } from '@/store/store'
 import { useGetSetState } from 'react-use'
 import { observer } from 'mobx-react-lite'
 import { Search } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 export const Tree = observer(() => {
   const store = useStore()

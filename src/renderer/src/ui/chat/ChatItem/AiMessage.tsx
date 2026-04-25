@@ -9,7 +9,7 @@ import { useGetSetState } from 'react-use'
 import { useStore } from '@/store/store'
 import { observer } from 'mobx-react-lite'
 import { runInAction } from 'mobx'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 dayjs.extend(relativeTime)
 

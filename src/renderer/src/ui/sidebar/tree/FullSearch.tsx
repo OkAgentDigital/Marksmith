@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite'
 import { getOffsetTop } from '@/utils/dom'
 import { delayRun } from '@/utils/common'
 import { Tooltip } from '@lobehub/ui'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "@/i18n.mock"
 
 const visitSchema = (schema: any[], cb: (node: any) => void) => {
   for (let c of schema) {

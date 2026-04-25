@@ -15,7 +15,7 @@ import { Refactor } from './refactor'
 import { delayRun } from '@/utils/common'
 import { MediaNode } from '@/editor'
 import { getImageData } from '@/editor/utils'
-import i18next from 'i18next'
+import i18n from "@/i18n.mock"
 
 const state = {
   view: 'folder' as 'folder' | 'search',
@@ -89,15 +89,15 @@ export class NoteStore extends StructStore<typeof state> {
   }>()
   deleteDialog(item: IDoc) {
     this.openConfirmDialog$.next({
-      title: i18next.t('note.confirmDelete', {
-        type: item.folder ? i18next.t('note.folder') : i18next.t('note.file'),
+      title: i18n.t('note.confirmDelete', {
+        type: item.folder ? i18n.t('note.folder') : i18n.t('note.file'),
         name: item.name
       }),
-      description: i18next.t('note.restoreFromTrash'),
+      description: i18n.t('note.restoreFromTrash'),
       onConfirm: async () => {
         this.moveToTrash(item, false)
       },
-      okText: i18next.t('note.moveToTrash')
+      okText: i18n.t('note.moveToTrash')
     })
   }
   constructor(private readonly store: Store) {
@@ -472,7 +472,7 @@ export class NoteStore extends StructStore<typeof state> {
             targetList.find((c) => c.name === dragNode.name)) ||
           (mode === 'enter' && dropNode!.children?.find((c) => c.name === dragNode.name))
         ) {
-          this.store.msg.info(i18next.t('note.fileExistsInTarget'))
+          this.store.msg.info(i18n.t('note.fileExistsInTarget'))
           return
         }
         if (mode === 'top' && targetList[index - 1] === dragNode) return
