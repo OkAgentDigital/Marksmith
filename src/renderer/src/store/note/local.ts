@@ -86,8 +86,8 @@ export class LocalFile {
     if (!this.saveLocal) {
       this.store.note.openConfirmDialog$.next({
         title: i18n.t('tip'),
-        description: i18n.t('workspace.bindFolderTip'),
-        okText: i18n.t('workspace.goToSettings'),
+        description: i18n.t('vault.bindFolderTip'),
+        okText: i18n.t('vault.goToSettings'),
         okType: 'primary',
         onConfirm: () => {
           this.store.note.openEditSpace$.next(this.store.note.state.currentSpace?.id!)

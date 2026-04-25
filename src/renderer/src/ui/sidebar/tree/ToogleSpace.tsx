@@ -105,7 +105,7 @@ export const ToggleSpace = observer(() => {
                 'flex justify-between items-center text-sm h-7 dark:text-gray-400 text-gray-500'
               }
             >
-              <span className={'pl-3 text-xs'}>{t('selectWorkspace')}</span>
+              <span className={'pl-3 text-xs'}>{t('selectVault')}</span>
             </div>
             {!!spaces.length && (
               <SpaceList
@@ -126,7 +126,7 @@ export const ToggleSpace = observer(() => {
                 className={`flex items-center h-8 px-2 duration-200 dark:hover:bg-gray-200/10 hover:bg-gray-100 cursor-pointer rounded`}
               >
                 <Settings size={15} />
-                <span className={'text-xs ml-2'}>{t('workspaceSettings')}</span>
+                <span className={'text-xs ml-2'}>{t('vaultSettings')}</span>
               </div>
               <div
                 onClick={() => {

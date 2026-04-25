@@ -63,7 +63,7 @@ export const EditSpace = observer(() => {
     if (state.filePath && !(await validatePath(state.filePath, state.spaceId))) {
       store.msg.open({
         type: 'info',
-        content: t('workspace.directoryUsed')
+        content: t('vault.directoryUsed')
       })
       return
     }
@@ -88,13 +88,13 @@ export const EditSpace = observer(() => {
         if (exist.name === state.spaceName) {
           store.msg.open({
             type: 'info',
-            content: t('workspace.nameExists')
+            content: t('vault.nameExists')
           })
         }
         if (state.filePath && exist.writeFolderPath === state.filePath) {
           store.msg.open({
             type: 'info',
-            content: t('workspace.directoryUsed')
+            content: t('vault.directoryUsed')
           })
         }
       } else {
@@ -125,17 +125,17 @@ export const EditSpace = observer(() => {
       title={
         <div className={'flex items-center'}>
           <IWorkspace className={'mr-1 text-lg'} />
-          <span className={'text-sm'}>{t('workspace.create')}</span>
+          <span className={'text-sm'}>{t('vault.create')}</span>
         </div>
       }
       onCancel={() => setState({ open: false })}
     >
       <div className={'py-3'}>
         <Form layout={'vertical'}>
-          <Form.Item label={t('workspace.name')}>
+          <Form.Item label={t('vault.name')}>
             <Space.Compact className={'w-full'}>
               <Input
-                placeholder={t('workspace.enterName')}
+                placeholder={t('vault.enterName')}
                 value={state.spaceName}
                 onChange={(e) => setState({ spaceName: e.target.value })}
                 maxLength={50}
@@ -158,12 +158,12 @@ export const EditSpace = observer(() => {
               )}
             </Space.Compact>
           </Form.Item>
-          <Form.Item label={t('workspace.directory')} tooltip={t('workspace.directoryTip')}>
+          <Form.Item label={t('vault.directory')} tooltip={t('vault.directoryTip')}>
             <Space.Compact className={'w-full'}>
               <Input
                 readOnly={true}
                 value={state.filePath}
-                placeholder={t('workspace.selectFolder')}
+                placeholder={t('vault.selectFolder')}
               />
               <Button
                 icon={state.filePath ? <CloseCircleOutlined /> : <FolderOpenOutlined />}
@@ -171,7 +171,7 @@ export const EditSpace = observer(() => {
                   if (state.filePath) {
                     store.note.openConfirmDialog$.next({
                       title: t('tip'),
-                      description: t('workspace.cancelWriteHint'),
+                      description: t('vault.cancelWriteHint'),
                       okText: t('ok'),
                       onConfirm: () => {
                         setState({ filePath: '' })
@@ -195,7 +195,7 @@ export const EditSpace = observer(() => {
                         if (includeSpace && (!state.spaceId || includeSpace.id !== state.spaceId)) {
                           store.msg.open({
                             type: 'info',
-                            content: t('workspace.directoryUsed')
+                            content: t('vault.directoryUsed')
                           })
                           return
                         }
@@ -213,7 +213,7 @@ export const EditSpace = observer(() => {
                         if (state.space) {
                           setState({ startWriting: true })
                           store.local.initialRewrite(store.note.state.nodes).then(() => {
-                            store.msg.success(t('workspace.filesWritten'))
+                            store.msg.success(t('vault.filesWritten'))
                           })
                         }
                       }
@@ -247,7 +247,7 @@ export const EditSpace = observer(() => {
                       <div>
                         {store.note.state.spaces.length > 1 && (
                           <Input
-                            placeholder={t('workspace.enterName')}
+                            placeholder={t('vault.enterName')}
                             value={state.inputDeleteName}
                             onChange={(e) => setState({ inputDeleteName: e.target.value })}
                           />
@@ -259,8 +259,8 @@ export const EditSpace = observer(() => {
                           className={'mt-4'}
                           onClick={() => {
                             store.note.openConfirmDialog$.next({
-                              title: t('workspace.confirmDelete'),
-                              okText: t('workspace.delete'),
+                              title: t('vault.confirmDelete'),
+                              okText: t('vault.delete'),
                               onConfirm: async () => {
                                 await store.model.deleteSpace(state.space!.id)
                                 store.note.setState((draft) => {
@@ -270,7 +270,7 @@ export const EditSpace = observer(() => {
                                   store.note.selectSpace(draft.spaces[0].id)
                                 })
                                 setState({ open: false })
-                                store.msg.success(t('workspace.deleted'))
+                                store.msg.success(t('vault.deleted'))
                               }
                             })
                           }}
@@ -279,7 +279,7 @@ export const EditSpace = observer(() => {
                             store.note.state.spaces.length === 1
                           }
                         >
-                          {t('workspace.delete')}
+                          {t('vault.delete')}
                         </Button>
                         <div
                           className={
@@ -287,8 +287,8 @@ export const EditSpace = observer(() => {
                           }
                         >
                           {store.note.state.spaces.length > 1
-                            ? t('workspace.deleteHint')
-                            : t('workspace.minSpaceHint')}
+                            ? t('vault.deleteHint')
+                            : t('vault.minSpaceHint')}
                         </div>
                       </div>
                     )
