@@ -5,9 +5,13 @@ import { knex } from './database/model'
 import { modelReady } from './database/api'
 import './handle'
 import { registerUpdate } from './update'
+import { setupApplicationMenu } from './menu'
 app.whenReady().then(async () => {
   await modelReady()
   electronApp.setAppUserModelId('com.marksmith')
+  
+  // Setup application menu
+  setupApplicationMenu()
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
