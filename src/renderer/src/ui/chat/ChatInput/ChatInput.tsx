@@ -1,19 +1,21 @@
 import { useStore } from '@/store/store'
 import { Tooltip } from '@lobehub/ui'
-import { Modal, Popover } from 'antd'
+import { Input, Modal, Popover } from 'antd'
 import isHotkey from 'is-hotkey'
 import {
+  BookOpen,
   CircleX,
   Earth,
   FileText,
   Image,
+  Library,
   Paperclip,
   Plus,
   SendHorizontal,
   SquareLibrary,
   X
 } from 'lucide-react'
-import { memo, useCallback, useEffect, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Editor, Element, Node, Range, Transforms } from 'slate'
 import { Editable, RenderElementProps, RenderLeafProps, Slate } from 'slate-react'
 import { IMessageDoc, IMessageFile } from 'types/model'
@@ -26,7 +28,7 @@ import { EditorUtils } from '@/editor/utils/editorUtils'
 import { observer } from 'mobx-react-lite'
 import { useLocalState } from '@/hooks/useLocalState'
 import { getDomRect } from '@/utils/dom'
-import { useTranslation } from "@/i18n.mock"
+import { useTranslation } from '@/i18n.mock'
 import { mb, nid } from '@/utils/common'
 import { fileOpen } from 'browser-fs-access'
 import { isImageModel } from '@/store/llm/data/data'
@@ -286,6 +288,56 @@ export const ChatInput = observer(() => {
       }, 16)
     }
   }, [store.settings.state.showChatBot])
+  const [vaultOpen, setVaultOpen] = useState(false)
+  const [vaultQuery, setVaultQuery] = useState('')
+  const [vaultResults, setVaultResults] = useState<any[]>([])
+  const [vaultLoading, setVaultLoading] = useState(false)
+
+  const searchVault = useCallback(async (query: string) => {
+    if (!query.trim()) return
+    setVaultLoading(true)
+    try {
+      const results = await window.mcp?.search(query, 10)
+      setVaultResults(results?.result || results || [])
+    } catch (e) {
+      console.error('Vault search failed:', e)
+      setVaultResults([])
+    } finally {
+      setVaultLoading(false)
+    }
+  }, [])
+
+  const addVaultFile = useCallback(
+    async (path: string) => {
+      try {
+        const content = await window.mcp?.read(path)
+        const doc: IMessageDoc = {
+          docId: nid(),
+          name: path.split('/').pop() || path,
+          content: content || ''
+        }
+        store.chat.setState((state) => {
+          state.cacheDocs.push(doc)
+        })
+        setVaultOpen(false)
+        setVaultQuery('')
+        setVaultResults([])
+        EditorUtils.focus(editor)
+      } catch (e) {
+        console.error('Failed to read vault file:', e)
+        store.msg.error(`Failed to read vault file: ${(e as Error).message}`)
+      }
+    },
+    [editor, store]
+  )
+
+  const openVaultSearch = useCallback(() => {
+    setState({ menuVisible: false })
+    setVaultOpen(true)
+    setVaultQuery('')
+    setVaultResults([])
+  }, [])
+
   return (
     <div className={'chat-input w-full relative'}>
       <div className={'chat-input-mask'}></div>
@@ -445,6 +497,15 @@ export const ChatInput = observer(() => {
                     <Image size={16} />
                     <span>{t('chat.input.image')}</span>
                   </div>
+                  <div
+                    onClick={openVaultSearch}
+                    className={
+                      'flex items-center space-x-3 h-8 px-4 cursor-pointer dark:hover:bg-white/10 hover:bg-black/5 duration-100'
+                    }
+                  >
+                    <BookOpen size={16} />
+                    <span>{t('chat.input.vault')}</span>
+                  </div>
                 </div>
               }
               trigger="click"
@@ -511,6 +572,53 @@ export const ChatInput = observer(() => {
           </div>
         </div>
       </div>
+      <Modal
+        title={t('chat.input.vaultSearch')}
+        open={vaultOpen}
+        onCancel={() => {
+          setVaultOpen(false)
+          setVaultResults([])
+          setVaultQuery('')
+        }}
+        footer={null}
+        width={480}
+        destroyOnClose
+      >
+        <Input.Search
+          placeholder={t('chat.input.vaultSearchPlaceholder')}
+          value={vaultQuery}
+          onChange={(e) => setVaultQuery(e.target.value)}
+          onSearch={searchVault}
+          loading={vaultLoading}
+          enterButton
+        />
+        <div className={'mt-3 max-h-64 overflow-y-auto'}>
+          {vaultResults.length === 0 && !vaultLoading && vaultQuery && (
+            <div className={'text-center text-sm dark:text-white/40 text-black/40 py-4'}>
+              {t('chat.input.vaultNoResults')}
+            </div>
+          )}
+          {vaultResults.map((item: any, i: number) => (
+            <div
+              key={i}
+              className={
+                'flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer dark:hover:bg-white/10 hover:bg-black/5 duration-100 mb-1'
+              }
+              onClick={() => addVaultFile(item.path || item.name)}
+            >
+              <div className={'flex items-center space-x-2 min-w-0'}>
+                <Library size={14} className={'shrink-0 dark:stroke-white/60 stroke-black/60'} />
+                <span className={'text-sm truncate'}>{item.path || item.name}</span>
+              </div>
+              {item.score != null && (
+                <span className={'text-xs dark:text-white/40 text-black/40 shrink-0 ml-2'}>
+                  {Math.round(item.score * 100)}%
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </Modal>
     </div>
   )
 })

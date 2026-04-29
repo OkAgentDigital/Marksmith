@@ -1,0 +1,130 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "../OkAgentDigital"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.renderWhitespace": "boundary",
+    "editor.rulers": [100],
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+      "dist": true,
+      "out": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "dist": true,
+      "out": true,
+      "pnpm-lock.yaml": true
+    },
+
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[css]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[yaml]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.suggest.autoImports": true,
+    "javascript.suggest.autoImports": true,
+
+    "tailwindCSS.includeLanguages": {
+      "html": "html",
+      "javascript": "javascript",
+      "typescript": "typescript"
+    },
+    "tailwindCSS.lint.cssConflict": "warning",
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.classAttributes": ["class", "className"],
+
+    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+
+    "npm.packageManager": "pnpm",
+    "typescript.tsdk": "node_modules/typescript/lib",
+
+    "workbench.colorTheme": "Dark Modern",
+    "workbench.iconTheme": "vs-seti",
+
+    "debug.javascript.terminalOptions": {
+      "skipFiles": ["<node_internals>/**"]
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss",
+      "mikestead.dotenv",
+      "eamodio.gitlens",
+      "streetsidesoftware.code-spell-checker",
+      "tintinweb.vscode-inline-bookmarks",
+      "editorconfig.editorconfig"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug Main Process",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceFolder}",
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron-vite",
+        "windows": {
+          "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron-vite.cmd"
+        },
+        "runtimeArgs": ["--sourcemap"]
+      },
+      {
+        "name": "Debug Renderer",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:5174",
+        "webRoot": "${workspaceFolder}/src/renderer",
+        "sourceMapPathOverrides": {
+          "webpack:///./src/*": "${webRoot}/src/*"
+        }
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Full App (Main + Renderer)",
+        "configurations": ["Debug Main Process", "Debug Renderer"]
+      }
+    ]
+  }
+}

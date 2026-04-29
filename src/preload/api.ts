@@ -10,7 +10,7 @@ import {
 import { writeFile, readFile, cp, rename } from 'fs/promises'
 import { join, basename, relative, extname, sep, isAbsolute } from 'path'
 import { app } from 'electron'
-import { ipcRenderer, clipboard, nativeImage } from 'electron'
+import { ipcRenderer, clipboard, nativeImage, contextBridge } from 'electron'
 import { lookup } from 'mime-types'
 const dev = process.env.NODE_ENV === 'development'
 
@@ -124,3 +124,12 @@ export const Api = {
     isAbsolute
   }
 }
+
+contextBridge.exposeInMainWorld('mcp', {
+  read: (path: string) => ipcRenderer.invoke('mcp:read', path),
+  write: (path: string, content: string) => ipcRenderer.invoke('mcp:write', path, content),
+  search: (query: string, limit?: number) => ipcRenderer.invoke('mcp:search', query, limit),
+  list: (path: string) => ipcRenderer.invoke('mcp:list', path),
+  summarize: (path: string) => ipcRenderer.invoke('mcp:summarize', path),
+  batchTag: (tag: string, pattern: string) => ipcRenderer.invoke('mcp:batchTag', tag, pattern),
+});

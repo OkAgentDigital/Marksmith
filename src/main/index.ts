@@ -6,6 +6,8 @@ import { modelReady } from './database/api'
 import './handle'
 import { registerUpdate } from './update'
 import { setupApplicationMenu } from './menu'
+import { initMCP } from './mcp/service'
+import { registerMCPHandlers } from './ipc/mcpHandlers'
 app.whenReady().then(async () => {
   await modelReady()
   electronApp.setAppUserModelId('com.marksmith')
@@ -42,6 +44,10 @@ app.whenReady().then(async () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
   registerUpdate()
+  
+  // Initialize MCP
+  await initMCP()
+  registerMCPHandlers()
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
