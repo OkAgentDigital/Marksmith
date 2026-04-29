@@ -1,15 +1,15 @@
-import { observer } from 'mobx-react-lite'
-import { Checkbox, Radio, Slider } from 'antd'
+import { useTranslation } from '@/i18n.mock'
 import { useStore } from '@/store/store'
-import { TextHelp } from '../common/HelpText'
-import { useTranslation } from "@/i18n.mock"
 import { Select } from '@lobehub/ui'
+import { Checkbox, Radio, Slider } from 'antd'
+import { observer } from 'mobx-react-lite'
+import { TextHelp } from '../common/HelpText'
 
 export const SetEditor = observer(() => {
   const store = useStore()
   const { t } = useTranslation()
   return (
-    <div className={'divide-y divide-gray-200 dark:divide-gray-200/10 px-2'}>
+    <div className={'divide-y divide-gray-200 dark:divide-gray-200/10 px-10 py-2'}>
       <div className={'flex justify-between items-center py-3'}>
         <div className={'text-sm'}>
           <span className={'mr-1'}>{t('settings.language')}</span>

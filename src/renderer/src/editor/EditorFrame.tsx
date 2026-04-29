@@ -1,19 +1,17 @@
-import { MEditor } from './Editor'
-import { Heading } from './tools/Leading'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { FloatBar } from './tools/FloatBar'
-import { Search } from './tools/Search'
-import { LangAutocomplete } from './tools/LangAutocomplete'
-import { InsertAutocomplete } from './tools/InsertAutocomplete'
-import { PhotoSlider } from 'react-photo-view'
+import { TabStore } from '@/store/note/tab'
+import { TabContext } from '@/store/note/TabCtx'
 import { useStore } from '@/store/store'
 import { isMod } from '@/utils/common'
-import { TabContext } from '@/store/note/TabCtx'
 import { observer } from 'mobx-react-lite'
-import { TabStore } from '@/store/note/tab'
-import { ChooseWikiLink } from './tools/Links'
+import React, { useCallback, useRef } from 'react'
+import { MEditor } from './Editor'
+import { FloatBar } from './tools/FloatBar'
+import { InsertAutocomplete } from './tools/InsertAutocomplete'
 import { InsertLink } from './tools/InsertLink'
-import { History } from './ui/History'
+import { LangAutocomplete } from './tools/LangAutocomplete'
+import { Heading } from './tools/Leading'
+import { ChooseWikiLink } from './tools/Links'
+import { Search } from './tools/Search'
 import { Empty } from './ui/Empty'
 export const EditorFrame = observer(({ tab }: { tab: TabStore }) => {
   const timer = useRef(0)
@@ -55,7 +53,7 @@ export const EditorFrame = observer(({ tab }: { tab: TabStore }) => {
                 <div style={{ maxWidth: 796 }} className={`flex-1 content px-12`}>
                   <MEditor tab={tab} />
                 </div>
-                {!store.settings.state.showChatBot && <Heading tab={tab} />}
+                {!store.settings.state.showAgent && <Heading tab={tab} />}
               </div>
               <ChooseWikiLink />
             </div>

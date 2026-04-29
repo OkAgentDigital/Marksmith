@@ -1,9 +1,9 @@
+import { useTranslation } from '@/i18n.mock'
 import { useStore } from '@/store/store'
 import { GlobalOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { observer } from 'mobx-react-lite'
 import { useMemo } from 'react'
-import { useTranslation } from "@/i18n.mock"
 
 export const ChatEmpty = observer(() => {
   const store = useStore()
@@ -21,10 +21,10 @@ export const ChatEmpty = observer(() => {
   return (
     <div className="flex h-full items-center justify-center relative flex-col pb-20 px-5">
       <div className={'max-w-96 text-center'}>
-        <div className="text-2xl font-bold">ChatBot, {greeting}</div>
+        <div className="text-2xl font-bold">Agent, {greeting}</div>
         {!store.settings.state.models.length && (
           <>
-            <div className="text-gray-400 mt-5 text-sm">{t('chat.chatbot_intro')}</div>
+            <div className="text-gray-400 mt-5 text-sm">{t('chat.agent_intro')}</div>
             <div className={'mt-5 px-10'}>
               <Button
                 block={true}

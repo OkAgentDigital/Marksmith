@@ -1,14 +1,14 @@
-import { Store } from './store'
-import { AiMode, IClient } from 'types/model'
-import { StructStore } from './struct'
-import { Subject } from 'rxjs'
-import { delayRun, isDark } from '@/utils/common'
-import { observable, runInAction } from 'mobx'
-import isHotkey from 'is-hotkey'
-import { Editor, Element, Node, Transforms } from 'slate'
 import { EditorUtils } from '@/editor/utils/editorUtils'
-import i18n, { getSystemLanguage } from "@/i18n.mock"
+import i18n, { getSystemLanguage } from '@/i18n.mock'
+import { delayRun, isDark } from '@/utils/common'
+import isHotkey from 'is-hotkey'
 import { Mermaid } from 'mermaid'
+import { observable, runInAction } from 'mobx'
+import { Subject } from 'rxjs'
+import { Editor, Element, Node, Transforms } from 'slate'
+import { AiMode, IClient } from 'types/model'
+import { Store } from './store'
+import { StructStore } from './struct'
 
 let mermaid: Mermaid | null = null
 const data = {
@@ -31,13 +31,13 @@ const state = {
   showHeading: true,
   headingWidth: 260,
   chatWidth: 460,
-  fullChatBot: false,
+  fullAgent: false,
   spellCheck: false,
   codeAutoBreak: false,
   maxMessageRounds: 8,
   maxHistoryChats: 100,
   codeTabSize: 2,
-  showChatBot: false,
+  showAgent: false,
   language: getSystemLanguage() as 'zh' | 'en',
   modelOptions: {
     temperature: {
@@ -161,9 +161,9 @@ export class SettingsStore extends StructStore<typeof state> {
     }
   }
 
-  toggleChatBot() {
-    if (this.state.showChatBot) {
-      this.setSetting('showChatBot', false)
+  toggleAgent() {
+    if (this.state.showAgent) {
+      this.setSetting('showAgent', false)
     } else {
       const editor = this.store.chat.editor
       const noteEditor = this.store.note.state.currentTab?.editor
@@ -185,7 +185,7 @@ export class SettingsStore extends StructStore<typeof state> {
           })
         }
       }
-      this.setSetting('showChatBot', true)
+      this.setSetting('showAgent', true)
     }
   }
   private changeTheme() {

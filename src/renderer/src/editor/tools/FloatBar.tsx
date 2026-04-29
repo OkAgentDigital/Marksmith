@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useTab } from '@/store/note/TabCtx'
+import { os } from '@/utils/common'
 import {
   BoldOutlined,
   CaretDownOutlined,
@@ -8,15 +9,14 @@ import {
   LinkOutlined,
   StrikethroughOutlined
 } from '@ant-design/icons'
-import { BaseRange, Editor, NodeEntry, Range, Transforms } from 'slate'
 import { Tooltip } from 'antd'
-import { EditorUtils } from '../utils/editorUtils'
-import { getSelRect } from '../utils/dom'
-import { ChevronUp, Code, Command, Option, Slash } from 'lucide-react'
-import { os } from '@/utils/common'
-import { useTab } from '@/store/note/TabCtx'
-import { useGetSetState } from 'react-use'
+import { ChevronUp, Code, Command, Slash } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
+import { useCallback, useEffect, useRef } from 'react'
+import { useGetSetState } from 'react-use'
+import { BaseRange, Editor, NodeEntry, Range, Transforms } from 'slate'
+import { getSelRect } from '../utils/dom'
+import { EditorUtils } from '../utils/editorUtils'
 
 function Mod() {
   if (os() === 'mac') {
@@ -124,7 +124,7 @@ export const FloatBar = observer(() => {
     } else {
       setState({ open: false })
     }
-  }, [tab.state.domRect, tab.store.settings.state.showChatBot])
+  }, [tab.state.domRect, tab.store.settings.state.showAgent])
 
   useEffect(() => {
     if (state().open) {

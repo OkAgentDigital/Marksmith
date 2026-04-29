@@ -1,14 +1,14 @@
-import { Dropdown } from 'antd'
-import { modelToLabel } from '@/utils/ai'
-import { Bolt, ChevronDown } from 'lucide-react'
+import { useTranslation } from '@/i18n.mock'
 import { useStore } from '@/store/store'
-import { ModelIcon } from './ModelIcon'
+import { modelToLabel } from '@/utils/ai'
+import { OpenRouter } from '@lobehub/icons'
 import { Tooltip } from '@lobehub/ui'
-import { useMemo } from 'react'
-import { OpenAI } from '@lobehub/icons'
-import { useSetState } from 'react-use'
+import { Dropdown } from 'antd'
+import { Bolt, ChevronDown } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
-import { useTranslation } from "@/i18n.mock"
+import { useMemo } from 'react'
+import { useSetState } from 'react-use'
+import { ModelIcon } from './ModelIcon'
 
 export const SwitchModel = observer((props: { maxWidth?: number }) => {
   const store = useStore()
@@ -100,7 +100,7 @@ export const SwitchModel = observer((props: { maxWidth?: number }) => {
               {chatModel ? (
                 <ModelIcon mode={chatModel.mode} size={17} />
               ) : (
-                <OpenAI.Avatar size={20} />
+                <OpenRouter.Avatar size={20} />
               )}
               <span
                 className={'ml-1.5 text-sm dark:text-white/90 truncate'}

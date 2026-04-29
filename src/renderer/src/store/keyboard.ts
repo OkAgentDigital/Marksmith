@@ -1,7 +1,7 @@
-import isHotkey from 'is-hotkey'
-import { Store } from './store'
-import { ReactEditor } from 'slate-react'
 import { dataTransform, stringTransform } from '@/utils/common'
+import isHotkey from 'is-hotkey'
+import { ReactEditor } from 'slate-react'
+import { Store } from './store'
 
 export class KeyboardStore {
   readonly taskMap = new Map<
@@ -512,7 +512,7 @@ export class KeyboardStore {
         this.currentTab?.keyboard.save()
         break
       case 'openChat':
-        this.store.settings.toggleChatBot()
+        this.store.settings.toggleAgent()
         break
       case 'newDoc':
         this.store.menu.createDoc(this.store.note.state.opendDoc?.parentId || 'root')

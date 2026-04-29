@@ -1,13 +1,13 @@
-import { useStore } from '@/store/store'
-import { IFold } from '@/icons/IFold'
-import { os } from '@/utils/common'
-import { Fragment, useCallback, useMemo } from 'react'
-import { observer } from 'mobx-react-lite'
-import { Bot, ChevronLeft, ChevronRight, Ellipsis, FileText } from 'lucide-react'
-import { Popover } from 'antd'
-import { IBackLink } from '@/icons/IBackLink'
-import { useUpdate } from 'react-use'
 import { useSubject } from '@/hooks/common'
+import { IBackLink } from '@/icons/IBackLink'
+import { IFold } from '@/icons/IFold'
+import { useStore } from '@/store/store'
+import { os } from '@/utils/common'
+import { Popover } from 'antd'
+import { Bot, ChevronLeft, ChevronRight, Ellipsis, FileText } from 'lucide-react'
+import { observer } from 'mobx-react-lite'
+import { Fragment, useMemo } from 'react'
+import { useUpdate } from 'react-use'
 export const Nav = observer(() => {
   const store = useStore()
   const update = useUpdate()
@@ -152,7 +152,7 @@ export const Nav = observer(() => {
           <div
             className={`nav-action`}
             onClick={() => {
-              store.settings.setSetting('showChatBot', !store.settings.state.showChatBot)
+              store.settings.setSetting('showAgent', !store.settings.state.showAgent)
             }}
           >
             <Bot size={18} />

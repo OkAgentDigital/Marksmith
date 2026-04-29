@@ -1,13 +1,11 @@
 import { useStore } from '@/store/store'
-import { useCallback } from 'react'
-import { Chats } from './Chats'
-import { Bot, PenLine } from 'lucide-react'
-import { observer } from 'mobx-react-lite'
-import { Tree } from './tree/Tree'
 import { os } from '@/utils/common'
+import { observer } from 'mobx-react-lite'
+import { useCallback } from 'react'
+import { Tree } from './tree/Tree'
 export const SideBar = observer(() => {
   const store = useStore()
-  const { sidePanelWidth, foldSideBar: fold, fullChatBot } = store.settings.state
+  const { sidePanelWidth, foldSideBar: fold, fullAgent } = store.settings.state
   const move = useCallback((e: React.MouseEvent) => {
     const startX = e.clientX
     document.body.classList.add('drag-sidebar')

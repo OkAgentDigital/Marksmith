@@ -1,21 +1,21 @@
-import { IDoc, ISpace } from 'types/model'
-import { Store } from '../store'
-import { History } from 'slate-history'
-import { TabStore } from './tab'
-import { BaseSelection, Editor, Range, Transforms } from 'slate'
-import { Subject } from 'rxjs'
-import { ReactNode } from 'react'
-import { StructStore } from '../struct'
-import { observable } from 'mobx'
-import isHotkey from 'is-hotkey'
-import { ReactEditor } from 'slate-react'
-import { EditorUtils } from '@/editor/utils/editorUtils'
-import { slugify } from '@/editor/utils/dom'
-import { Refactor } from './refactor'
-import { delayRun } from '@/utils/common'
 import { MediaNode } from '@/editor'
 import { getImageData } from '@/editor/utils'
-import i18n from "@/i18n.mock"
+import { slugify } from '@/editor/utils/dom'
+import { EditorUtils } from '@/editor/utils/editorUtils'
+import i18n from '@/i18n.mock'
+import { delayRun } from '@/utils/common'
+import isHotkey from 'is-hotkey'
+import { observable } from 'mobx'
+import { ReactNode } from 'react'
+import { Subject } from 'rxjs'
+import { BaseSelection, Editor, Range, Transforms } from 'slate'
+import { History } from 'slate-history'
+import { ReactEditor } from 'slate-react'
+import { IDoc, ISpace } from 'types/model'
+import { Store } from '../store'
+import { StructStore } from '../struct'
+import { Refactor } from './refactor'
+import { TabStore } from './tab'
 
 const state = {
   view: 'folder' as 'folder' | 'search',
@@ -108,7 +108,7 @@ export class NoteStore extends StructStore<typeof state> {
     )
     this.refactor = new Refactor(this.store)
     window.addEventListener('keydown', (e) => {
-      if (this.store.settings.state.fullChatBot) return
+      if (this.store.settings.state.fullAgent) return
       const editor = this.state.currentTab.editor
       if (isHotkey('mod+c', e) && this.state.opendDoc) {
         const [node] = Editor.nodes(editor, {

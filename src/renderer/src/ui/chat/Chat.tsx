@@ -1,16 +1,16 @@
-import { AiMessageList } from './ChatList'
+import { useTranslation } from '@/i18n.mock'
 import { useStore } from '@/store/store'
-import { ChatInput } from './ChatInput/ChatInput'
+import { os } from '@/utils/common'
+import { Dropdown } from 'antd'
+import { Download, FileOutput, Fullscreen, History, Minimize, PenLine, Plus, X } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 import { useCallback } from 'react'
-import { SwitchModel } from './SwitchModel'
-import { Download, FileOutput, Fullscreen, History, Minimize, PenLine, Plus, X } from 'lucide-react'
+import { ChatInput } from './ChatInput/ChatInput'
+import { AiMessageList } from './ChatList'
+import { ChatNotes } from './ChatNotes'
 import { ChatEmpty } from './Empty'
 import { ChatSearch } from './Search'
-import { os } from '@/utils/common'
-import { ChatNotes } from './ChatNotes'
-import { Dropdown } from 'antd'
-import { useTranslation } from "@/i18n.mock"
+import { SwitchModel } from './SwitchModel'
 
 export const Chat = observer(() => {
   const store = useStore()
@@ -44,30 +44,26 @@ export const Chat = observer(() => {
   return (
     <div
       className={`border-l min-w-[380px] dark:border-white/10 border-black/15
-        ${store.settings.state.showChatBot ? 'relative' : 'invisible opacity-0 w-0 h-0 absolute left-0 top-0 pointer-events-none'} 
-        ${store.settings.state.fullChatBot ? 'flex-1 w-0' : ''}
+        ${store.settings.state.showAgent ? 'relative' : 'invisible opacity-0 w-0 h-0 absolute left-0 top-0 pointer-events-none'}
+        ${store.settings.state.fullAgent ? 'flex-1 w-0' : ''}
       `}
       style={{
-        width: store.settings.state.fullChatBot ? '' : store.settings.state.chatWidth
+        width: store.settings.state.fullAgent ? '' : store.settings.state.chatWidth
       }}
     >
       <div className={`chat ${chat?.pending ? 'pending' : ''}`}>
         <div className={'h-10 relative z-10 drag-nav'}>
           <div
-            className={`flex pl-1 pr-2 justify-between items-center h-full ${store.settings.state.fullChatBot && os() === 'mac' ? 'pl-20' : ''}`}
+            className={`flex pl-1 pr-2 justify-between items-center h-full ${store.settings.state.fullAgent && os() === 'mac' ? 'pl-20' : ''}`}
           >
             <div className={'flex items-center drag-none'}>
               <div
                 className={'nav-action'}
                 onClick={() => {
-                  store.settings.setSetting('fullChatBot', !store.settings.state.fullChatBot)
+                  store.settings.setSetting('fullAgent', !store.settings.state.fullAgent)
                 }}
               >
-                {store.settings.state.fullChatBot ? (
-                  <Minimize size={16} />
-                ) : (
-                  <Fullscreen size={16} />
-                )}
+                {store.settings.state.fullAgent ? <Minimize size={16} /> : <Fullscreen size={16} />}
               </div>
               <SwitchModel maxWidth={store.settings.state.chatWidth - 220} />
             </div>
@@ -131,8 +127,8 @@ export const Chat = observer(() => {
               <div
                 className={'nav-action'}
                 onClick={() => {
-                  store.settings.setSetting('showChatBot', false)
-                  store.settings.setSetting('fullChatBot', false)
+                  store.settings.setSetting('showAgent', false)
+                  store.settings.setSetting('fullAgent', false)
                 }}
               >
                 <X size={17} />

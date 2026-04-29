@@ -8,7 +8,7 @@ import { withReact } from 'slate-react'
 import { IChat, IMessage, IMessageDoc, IMessageFile, IMessageModel } from 'types/model'
 import { getTokens } from '../utils/ai'
 import { AiClient } from './llm/client'
-import { openAiModels } from './llm/data/data'
+import { providerOptions } from './llm/data/data'
 import { ClientModel } from './settings'
 import { Store } from './store'
 import { StructStore } from './struct'
@@ -134,7 +134,7 @@ export class ChatStore extends StructStore<typeof state> {
         model: useModel,
         mode: config.mode,
         apiKey: config.apiKey,
-        baseUrl: config.baseUrl || openAiModels.get(config.mode),
+        baseUrl: config.baseUrl || providerOptions.get(config.mode)?.baseUrl,
         id: id,
         options: config.options
       })
@@ -164,7 +164,7 @@ export class ChatStore extends StructStore<typeof state> {
           model: model.model,
           mode: model.mode,
           apiKey: model.apiKey,
-          baseUrl: model.baseUrl || openAiModels.get(model.mode),
+          baseUrl: model.baseUrl || providerOptions.get(model.mode)?.baseUrl,
           id: model.id,
           options: model.options
         })
@@ -729,7 +729,7 @@ You can call multiple tools at once by including multiple objects in the array. 
       return await new Promise(async (resolve, reject) => {
         const client = new AiClient({
           mode: provider,
-          baseUrl: baseUrl || openAiModels.get(mode),
+          baseUrl: baseUrl || providerOptions.get(mode)?.baseUrl,
           apiKey: apiKey,
           model: model,
           id: nid(),

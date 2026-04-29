@@ -1,15 +1,5 @@
-import { Range as SlateRange } from 'slate'
 export type MessageRole = 'user' | 'assistant' | 'system'
-export type AiMode =
-  | 'qwen'
-  | 'deepseek'
-  | 'openai'
-  | 'claude'
-  | 'lmstudio'
-  | 'ollama'
-  | 'custom'
-  | 'mowen'
-  | 'gemini'
+export type AiMode = 'openrouter'
 
 export interface IMessageModel {
   role: MessageRole

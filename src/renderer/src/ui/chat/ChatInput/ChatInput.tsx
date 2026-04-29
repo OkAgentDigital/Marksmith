@@ -1,6 +1,18 @@
+import { EditorUtils } from '@/editor/utils/editorUtils'
+import { useSubject } from '@/hooks/common'
+import { useLocalState } from '@/hooks/useLocalState'
+import { useTranslation } from '@/i18n.mock'
+import { ILoad } from '@/icons/ILoad'
+import { IStop } from '@/icons/IStop'
+import { isImageModel } from '@/store/llm/data/data'
 import { useStore } from '@/store/store'
+import { copyToClipboard } from '@/utils/clipboard'
+import { mb, nid } from '@/utils/common'
+import { getDomRect } from '@/utils/dom'
+import { getFileExtension } from '@/utils/string'
 import { Tooltip } from '@lobehub/ui'
 import { Input, Modal, Popover } from 'antd'
+import { fileOpen } from 'browser-fs-access'
 import isHotkey from 'is-hotkey'
 import {
   BookOpen,
@@ -15,24 +27,12 @@ import {
   SquareLibrary,
   X
 } from 'lucide-react'
+import { observer } from 'mobx-react-lite'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Editor, Element, Node, Range, Transforms } from 'slate'
 import { Editable, RenderElementProps, RenderLeafProps, Slate } from 'slate-react'
 import { IMessageDoc, IMessageFile } from 'types/model'
 import { chooseFile } from './ChooseFile'
-import { ILoad } from '@/icons/ILoad'
-import { copyToClipboard } from '@/utils/clipboard'
-import { IStop } from '@/icons/IStop'
-import { getFileExtension } from '@/utils/string'
-import { EditorUtils } from '@/editor/utils/editorUtils'
-import { observer } from 'mobx-react-lite'
-import { useLocalState } from '@/hooks/useLocalState'
-import { getDomRect } from '@/utils/dom'
-import { useTranslation } from '@/i18n.mock'
-import { mb, nid } from '@/utils/common'
-import { fileOpen } from 'browser-fs-access'
-import { isImageModel } from '@/store/llm/data/data'
-import { useSubject } from '@/hooks/common'
 
 export const ChatInput = observer(() => {
   const store = useStore()
@@ -76,9 +76,7 @@ export const ChatInput = observer(() => {
         return false
       }
     } else if (type === 'web') {
-      if (['deepseek', 'claude', 'gemini'].includes(client.mode)) {
-        return false
-      }
+      // OpenRouter supports web search via plugins
     }
     return true
   }, [])
@@ -282,12 +280,12 @@ export const ChatInput = observer(() => {
       })
   }, [])
   useEffect(() => {
-    if (store.settings.state.showChatBot) {
+    if (store.settings.state.showAgent) {
       setTimeout(() => {
         EditorUtils.focus(editor)
       }, 16)
     }
-  }, [store.settings.state.showChatBot])
+  }, [store.settings.state.showAgent])
   const [vaultOpen, setVaultOpen] = useState(false)
   const [vaultQuery, setVaultQuery] = useState('')
   const [vaultResults, setVaultResults] = useState<any[]>([])

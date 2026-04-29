@@ -1,25 +1,13 @@
-import { BaseModel } from './provider/struct'
-import { OpenaiModel } from './provider/openai'
-import { GeminiModel } from './provider/gemini'
-import { CompletionOptions, ModelConfig, StreamOptions } from './type'
-import { OpenRouterModel } from './provider/openRouter'
-import { ClaudeModel } from './provider/claude'
 import { IMessageModel } from 'types/model'
-const openAiMode = new Set(['openai', 'qwen', 'deepseek'])
+import { OpenRouterModel } from './provider/openRouter'
+import { BaseModel } from './provider/struct'
+import { CompletionOptions, ModelConfig, StreamOptions } from './type'
 export class AiClient implements BaseModel {
   client!: BaseModel
   config: ModelConfig
   constructor(config: typeof this.config) {
     this.config = config
-    if (openAiMode.has(config.mode)) {
-      this.client = new OpenaiModel(config)
-    } else if (config.mode === 'gemini') {
-      this.client = new GeminiModel(config)
-    } else if (config.mode === 'openrouter') {
-      this.client = new OpenRouterModel(config)
-    } else if (config.mode === 'claude') {
-      this.client = new ClaudeModel(config)
-    }
+    this.client = new OpenRouterModel(config)
   }
   async completion<T = any>(
     messages: IMessageModel[],
