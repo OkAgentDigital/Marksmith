@@ -1,17 +1,17 @@
-import { app, BrowserWindow } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
-import { Bound, createWindow, lastCloseWindow, winMap } from './window'
-import { knex } from './database/model'
+import { app, BrowserWindow } from 'electron'
 import { modelReady } from './database/api'
+import { knex } from './database/model'
 import './handle'
-import { registerUpdate } from './update'
-import { setupApplicationMenu } from './menu'
-import { initMCP } from './mcp/service'
 import { registerMCPHandlers } from './ipc/mcpHandlers'
+import { initMCP } from './mcp/service'
+import { setupApplicationMenu } from './menu'
+import { registerUpdate } from './update'
+import { Bound, createWindow, lastCloseWindow, winMap } from './window'
 app.whenReady().then(async () => {
   await modelReady()
   electronApp.setAppUserModelId('com.marksmith')
-  
+
   // Setup application menu
   setupApplicationMenu()
   app.on('browser-window-created', (_, window) => {
@@ -44,10 +44,16 @@ app.whenReady().then(async () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
   registerUpdate()
-  
-  // Initialize MCP
-  await initMCP()
-  registerMCPHandlers()
+
+  // Initialize MCP via Hivemind (non-blocking — don't crash if Hivemind isn't running)
+  try {
+    await initMCP()
+    registerMCPHandlers()
+  } catch (e) {
+    console.warn('MCP not available (Hivemind not running):', (e as Error)?.message)
+    // Register handlers anyway — they'll return friendly errors
+    registerMCPHandlers()
+  }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -1,221 +1,75 @@
-import { Form, Select, Input, Popconfirm, InputNumber, Slider, Collapse, Checkbox } from 'antd'
+import { Form, Select, Input, Slider, Collapse, Checkbox } from 'antd'
 import { useStore } from '@/store/store'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useGetSetState } from 'react-use'
-import { IClient } from 'types/model'
-import { AiModeLabel, openAiModels, providerOptions } from '@/store/llm/data/data'
-import { ModelIcon } from '../chat/ModelIcon'
-import { CircleCheckBig, CircleX } from 'lucide-react'
+import { openAiModels } from '@/store/llm/data/data'
+import { CircleCheckBig, CircleX, Plug, Wifi, WifiOff } from 'lucide-react'
 import { nid } from '@/utils/common'
 import { observer } from 'mobx-react-lite'
-import { useLocalState } from '@/hooks/useLocalState'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { Button, Modal, SortableList } from '@lobehub/ui'
-import { useTranslation } from "@/i18n.mock"
+import { Button, Modal } from '@lobehub/ui'
+
+const FREE_MODELS = [
+  'google/gemini-2.5-flash-preview-04-17:free',
+  'deepseek/deepseek-chat:free',
+  'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',
+]
 
 const ModalForm = observer((props: { open: boolean; id: string | null; onClose: () => void }) => {
   const [form] = Form.useForm()
   const store = useStore()
-  const { t } = useTranslation()
-  const [state, setState] = useGetSetState({
-    loading: false,
-    error: '',
-    checking: false,
-    checked: false,
-    defaultUrl: '',
-    modelOptions: [] as string[]
-  })
+  const [state, setState] = useGetSetState({ loading: false, error: '', checking: false, checked: false })
+
   const check = useCallback(() => {
     form.validateFields().then((data) => {
       setState({ checking: true })
-      store.chat
-        .checkLLMApiConnection({
-          provider: openAiModels.has(data.mode) ? 'openai' : data.mode,
-          baseUrl: data.baseUrl,
-          apiKey: data.apiKey,
-          model: data.models[0],
-          mode: data.mode
-        })
-        .then(async (res) => {
-          if (res.success) {
-            setState({ checked: true, error: '' })
-          } else {
-            setState({ error: res.message, checked: false })
-          }
-        })
-        .finally(() => {
-          setState({ checking: false })
-        })
+      store.chat.checkLLMApiConnection({ provider: 'openrouter', baseUrl: data.baseUrl, apiKey: data.apiKey, model: data.models[0], mode: 'openrouter' })
+        .then((res) => setState(res.success ? { checked: true, error: '' } : { error: res.message, checked: false }))
+        .finally(() => setState({ checking: false }))
     })
   }, [form])
+
   const save = useCallback(() => {
     const { models } = store.settings.state
     form.validateFields().then(async (data) => {
-      const model: any = {
-        name: data.name,
-        mode: data.mode,
-        baseUrl: data.baseUrl || undefined,
-        apiKey: data.apiKey,
-        models: data.models,
-        id: props.id,
-        sort: data.sort || models.length
-      }
-      if (props.id) {
-        await store.model.updateClient(props.id, model)
-      } else {
-        model.id = nid()
-        await store.model.createClient(model)
-      }
-      const target = models.find((item) => item.id === model.id)
-      if (!target) {
-        store.settings.setState((state) => {
-          state.models = [...models, model]
-        })
-        store.settings.setDefaultModel({ providerId: model.id, model: model.models[0] })
-      } else {
-        await store.settings.getModels()
-        store.chat.setChatModel(
-          model.id,
-          store.chat.activeClient?.config.model ||
-            store.settings.state.defaultModel?.model ||
-            model.models[0]
-        )
-      }
-      store.msg.success(t('model.save_success'))
-      props.onClose()
+      const m: any = { name: data.name, mode: 'openrouter', baseUrl: data.baseUrl || 'https://openrouter.ai/api/v1', apiKey: data.apiKey, models: data.models, id: props.id, sort: data.sort || models.length }
+      if (props.id) await store.model.updateClient(props.id, m); else { m.id = nid(); await store.model.createClient(m) }
+      const t = models.find((x) => x.id === m.id)
+      if (!t) { store.settings.setState((s) => { s.models = [...models, m] }); store.settings.setDefaultModel({ providerId: m.id, model: m.models[0] }) }
+      else { await store.settings.getModels(); store.chat.setChatModel(m.id, store.chat.activeClient?.config.model || store.settings.state.defaultModel?.model || m.models[0]) }
+      store.msg.success('Saved'); props.onClose()
     })
   }, [form, props.id])
 
   useEffect(() => {
-    if (props.open) {
-      form.resetFields()
-      setState({
-        checked: false,
-        error: '',
-        loading: false,
-        checking: false
+    if (!props.open) return
+    form.resetFields(); setState({ checked: false, error: '', loading: false, checking: false })
+    if (props.id) {
+      store.model.getClient(props.id).then((model) => {
+        if (model) form.setFieldsValue({ name: model.name, mode: 'openrouter', baseUrl: model.baseUrl, apiKey: model.apiKey, models: model.models, sort: model.sort })
       })
-      if (props.id) {
-        store.model.getClient(props.id).then((model) => {
-          if (model) {
-            setState({
-              defaultUrl: providerOptions.get(model.mode)?.baseUrl || '',
-              modelOptions: providerOptions.get(model.mode)?.models || []
-            })
-            form.setFieldsValue({
-              name: model.name,
-              mode: model.mode,
-              baseUrl: model.baseUrl,
-              apiKey: model.apiKey,
-              models: model.models,
-              sort: model.sort
-            })
-          }
-        })
-      }
+    } else {
+      form.setFieldsValue({ mode: 'openrouter', baseUrl: 'https://openrouter.ai/api/v1', models: FREE_MODELS, name: 'OpenRouter' })
     }
   }, [props.id, props.open])
 
   return (
-    <Modal
-      title={t('model.add_model')}
-      open={props.open}
-      footer={null}
-      width={500}
-      onCancel={props.onClose}
-      styles={{
-        wrapper: { zIndex: 2210 },
-        mask: { zIndex: 2200 }
-      }}
-    >
-      <Form form={form} layout={'vertical'} labelAlign={'right'} size={'middle'}>
-        <Form.Item label={t('model.name')} name={'id'} hidden={true}>
-          <Input />
+    <Modal title="OpenRouter API" open={props.open} footer={null} width={500} onCancel={props.onClose} styles={{ wrapper: { zIndex: 2210 }, mask: { zIndex: 2200 } }}>
+      <Form form={form} layout="vertical" labelAlign="right" size="middle">
+        <Form.Item label="Name" name="name" rules={[{ required: true }]}><Input placeholder="My API config" /></Form.Item>
+        <Form.Item label="Provider" name="mode" initialValue="openrouter"><Select disabled options={[{ label: 'OpenRouter', value: 'openrouter' }]} /></Form.Item>
+        <Form.Item rules={[{ required: true }]} label="API Key" name="apiKey"><Input.Password placeholder="sk-or-v1-..." /></Form.Item>
+        <Form.Item rules={[{ required: true, type: 'array' }]} label="Models" name="models">
+          <Select mode="tags" dropdownStyle={{ zIndex: 2210 }} style={{ width: '100%' }} placeholder="Add model IDs" />
         </Form.Item>
-        <Form.Item label={t('model.name')} name={'name'} rules={[{ required: true }]}>
-          <Input placeholder={t('model.custom_name')} />
-        </Form.Item>
-        <Form.Item
-          label={t('model.api_provider')}
-          name={'mode'}
-          rules={[{ required: true }]}
-          tooltip={{
-            title: t('model.api_provider_help'),
-            styles: {
-              root: {
-                zIndex: 2210
-              }
-            }
-          }}
-        >
-          <Select
-            options={Array.from(AiModeLabel.entries()).map(([key, value]) => ({
-              label: (
-                <div className={'flex items-center gap-2'}>
-                  {' '}
-                  <ModelIcon mode={key} size={16} /> <span>{value}</span>
-                </div>
-              ),
-              value: key
-            }))}
-            onChange={(value) => {
-              setState({
-                defaultUrl: providerOptions.get(value)?.baseUrl || '',
-                modelOptions: providerOptions.get(value)?.models || []
-              })
-            }}
-            dropdownStyle={{ zIndex: 2210 }}
-            placeholder={t('model.select_provider')}
-          />
-        </Form.Item>
-        <Form.Item rules={[{ required: true }]} label={t('model.api_key')} name={'apiKey'}>
-          <Input placeholder={t('model.enter_api_key')} />
-        </Form.Item>
-        <Form.Item
-          rules={[{ required: true, type: 'array' }]}
-          label={t('model.model')}
-          name={'models'}
-        >
-          <Select
-            mode="tags"
-            dropdownStyle={{ zIndex: 2210 }}
-            style={{ width: '100%' }}
-            options={state().modelOptions.map((v) => {
-              return {
-                label: v,
-                value: v
-              }
-            })}
-            placeholder={t('model.model_placeholder')}
-          />
-        </Form.Item>
-        <Form.Item rules={[{ type: 'url' }]} label={t('model.api_base_url')} name={'baseUrl'}>
-          <Input
-            placeholder={`${state().defaultUrl ? `${t('model.default_use')} ${state().defaultUrl}` : ''}`}
-          />
-        </Form.Item>
-        <div className={'flex justify-between items-center space-x-3'}>
+        <Form.Item label="API Base URL" name="baseUrl"><Input placeholder="https://openrouter.ai/api/v1" /></Form.Item>
+        <div className="flex justify-between items-center space-x-3">
           <div>
-            {state().checked && (
-              <div className={'flex items-center'}>
-                <CircleCheckBig className={'w-4 h-4 mr-2 text-green-500'} />
-                {t('model.check_passed')}
-              </div>
-            )}
-            {!state().checked && !!state().error && (
-              <div className={'text-red-500 flex items-center'}>
-                <CircleX className={'w-4 h-4 mr-2 text-red-500'} />
-                {state().error || ''}
-              </div>
-            )}
+            {state().checked && <div className="flex items-center"><CircleCheckBig className="w-4 h-4 mr-2 text-green-500" />Connection OK</div>}
+            {!state().checked && !!state().error && <div className="text-red-500 flex items-center"><CircleX className="w-4 h-4 mr-2 text-red-500" />{state().error || ''}</div>}
           </div>
-          <div className={'space-x-3 flex-shrink-0 flex items-center'}>
-            <Button type={'default'} size={'middle'} onClick={check} loading={state().checking}>
-              {t('model.check')}
-            </Button>
-            <Button size={'middle'} onClick={save} loading={state().loading} type={'primary'}>
-              {t('model.save')}
-            </Button>
+          <div className="space-x-3 shrink-0 flex items-center">
+            <Button type="default" size="middle" onClick={check} loading={state().checking}>Check</Button>
+            <Button size="middle" onClick={save} loading={state().loading} type="primary">Save</Button>
           </div>
         </div>
       </Form>
@@ -223,342 +77,76 @@ const ModalForm = observer((props: { open: boolean; id: string | null; onClose: 
   )
 })
 
-const ModelItem = observer(
-  ({ model, onRemove, onEdit }: { model: IClient; onRemove: () => void; onEdit: () => void }) => {
-    const { t } = useTranslation()
-    const label = useMemo(() => {
-      return (
-        <div className={'flex items-center select-none'}>
-          {model.mode && <ModelIcon mode={model.mode as any} size={16} />}
-          <div className={'flex-1 truncate w-0 ml-1'}>{model.name || t('model.unnamed')}</div>
-        </div>
-      )
-    }, [model])
-    return (
-      <div className={'flex items-center justify-between'}>
-        <div className={'flex-1 w-0'}>{label}</div>
-        <div className={'flex items-center space-x-1'}>
-          <Button type={'text'} icon={<EditOutlined />} size={'small'} onClick={onEdit}></Button>
-          <Popconfirm
-            title={t('model.confirm_delete')}
-            onConfirm={() => onRemove()}
-            styles={{ root: { zIndex: 2200 } }}
-          >
-            <Button type={'text'} icon={<DeleteOutlined />} size={'small'}></Button>
-          </Popconfirm>
-        </div>
+const HivemindStatus = observer(() => {
+  const [ok, setOk] = useState<boolean | null>(null)
+  useEffect(() => {
+    const check = async () => { try { const r: any = await (window as any).api?.ipc?.invoke?.('mcp:status'); setOk(r?.connected ?? false) } catch { setOk(false) } }
+    check(); const i = setInterval(check, 5000); return () => clearInterval(i)
+  }, [])
+  return (
+    <div className={'flex items-center justify-between p-4 rounded-xl border-2 border-dashed cursor-pointer transition-all hover:border-green-500/50 ' + (ok === true ? 'border-green-500/40 bg-green-500/5' : 'border-amber-500/40 bg-amber-500/5')}
+      onClick={() => navigator.clipboard.writeText('cd ~/Code/OkAgentDigital/Hivemind && cargo run --release')} title={ok ? 'Hivemind running' : 'Copy start command'}>
+      <div className="flex items-center gap-3">
+        <Plug className="w-5 h-5 text-white/70" />
+        <div><div className="text-sm font-medium">Hivemind Orchestrator</div><div className="text-xs text-white/50 mt-0.5">{ok === null ? 'Checking...' : ok ? 'Online' : 'Offline'}</div></div>
       </div>
-    )
-  }
-)
+      <div>{ok === null ? <div className="w-3 h-3 rounded-full bg-white/30 animate-pulse" /> : ok ? <Wifi className="w-5 h-5 text-green-400" /> : <WifiOff className="w-5 h-5 text-amber-400" />}</div>
+    </div>
+  )
+})
 
 export const ModelSettings = observer(() => {
   const store = useStore()
   const timer = useRef(0)
-  const { t } = useTranslation()
-  const [state, setState] = useLocalState({
-    openEdit: false,
-    selectedId: null as string | null
-  })
-  const models = store.settings.state.models
-  const remove = useCallback((id: string) => {
-    if (models.find((m) => m.id === id)) {
-      store.settings.removeModel(id)
-    }
-  }, [])
-  const updateSettings = useCallback((key: keyof typeof store.settings.state) => {
-    clearTimeout(timer.current)
-    timer.current = window.setTimeout(() => {
-      store.settings.setSetting(key, store.settings.state[key])
-    }, 500)
-  }, [])
+  const [st, setSt] = useGetSetState({ openEdit: false, selectedId: null as string | null })
+  const m = store.settings.state.models
+  const or = m.find((x) => x.mode === 'openrouter' || x.baseUrl?.includes('openrouter'))
+  const upd = (k: keyof typeof store.settings.state) => { clearTimeout(timer.current); timer.current = window.setTimeout(() => store.settings.setSetting(k, store.settings.state[k]), 500) }
   return (
-    <div className={'py-5 max-w-[560px] mx-auto'}>
-      <div className={'space-y-5'}>
-        <SortableList
-          gap={2}
-          items={models}
-          className={'w-full'}
-          onChange={(items: IClient[]) => {
-            store.settings.setState((state) => {
-              state.models = items
-            })
-            store.model.sortClients(items.map((m) => m.id!))
-          }}
-          renderItem={(m: IClient) => (
-            <SortableList.Item id={m.id}>
-              <SortableList.DragHandle />
-              <div className={'flex-1'}>
-                <ModelItem
-                  key={m.id}
-                  model={m}
-                  onRemove={() => remove(m.id!)}
-                  onEdit={() => {
-                    setState({
-                      openEdit: true,
-                      selectedId: m.id
-                    })
-                  }}
-                />
-              </div>
-            </SortableList.Item>
-          )}
-        />
-      </div>
-      {!models.length && <div className={'text-center text-sm'}>{t('model.add_model_tip')}</div>}
-      <div className={'mt-6 px-20'}>
-        <Button
-          block={true}
-          type={'primary'}
-          onClick={() => {
-            setState({
-              openEdit: true,
-              selectedId: null
-            })
-          }}
-        >
-          {t('model.add_model')}
+    <div className="py-5 max-w-140 mx-auto">
+      <div className="mb-4">
+        <Button block type="primary" size="large" className="h-14! text-base! rounded-xl!" onClick={() => setSt({ openEdit: true, selectedId: or?.id || null })}>
+          <div className="flex items-center justify-center gap-3">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" /><path d="M8 12l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+            OpenRouter{or ? <span className="text-xs opacity-60 font-normal ml-1">· {or.models?.length || 0} models</span> : null}
+          </div>
         </Button>
+        {or ? <p className="text-xs text-white/50 mt-1.5 text-center">{or.models?.slice(0, 3).join(', ')}{(or.models?.length || 0) > 3 ? ' ...' : ''}</p> : <p className="text-xs text-white/40 mt-1.5 text-center">Tap to configure with 3 free models pre-loaded</p>}
       </div>
-      <div className={'mt-10'}>
-        <Form className={'w-full'} layout={'horizontal'} labelAlign={'left'}>
-          <Form.Item
-            label={t('model.max_rounds')}
-            tooltip={{
-              title: t('model.max_rounds_help'),
-              styles: {
-                root: {
-                  zIndex: 2210
-                }
-              }
-            }}
-          >
-            <div className={'ml-5'}>
-              <Slider
-                min={4}
-                max={20}
-                onChange={(value) => {
-                  store.settings.setState((state) => {
-                    state.maxMessageRounds = value
-                  })
-                  updateSettings('maxMessageRounds')
-                }}
-                value={store.settings.state.maxMessageRounds}
-                tooltip={{ zIndex: 2210, arrow: false }}
-              />
-            </div>
+      <HivemindStatus />
+      <div className="mt-8">
+        <Form className="w-full" layout="horizontal" labelAlign="left">
+          <Form.Item label="Context Rounds" tooltip={{ title: 'Recent conversation rounds to include as context', styles: { root: { zIndex: 2210 } } }}>
+            <div className="ml-5"><Slider min={4} max={20} onChange={(v) => { store.settings.setState((s) => { s.maxMessageRounds = v }); upd('maxMessageRounds') }} value={store.settings.state.maxMessageRounds} tooltip={{ zIndex: 2210, arrow: false }} /></div>
           </Form.Item>
-          <Form.Item
-            label={t('model.max_history_count')}
-            tooltip={{
-              title: t('model.max_history_count_help'),
-              styles: {
-                root: {
-                  zIndex: 2210
-                }
-              }
-            }}
-          >
-            <div className={'ml-5'}>
-              <Slider
-                min={50}
-                max={500}
-                step={50}
-                onChange={(value) => {
-                  store.settings.setState((state) => {
-                    state.maxHistoryChats = value
-                  })
-                  updateSettings('maxHistoryChats')
-                }}
-                value={store.settings.state.maxHistoryChats}
-                tooltip={{ zIndex: 2210, arrow: false }}
-              />
-            </div>
+          <Form.Item label="History Limit" tooltip={{ title: 'Max chat histories to keep', styles: { root: { zIndex: 2210 } } }}>
+            <div className="ml-5"><Slider min={50} max={500} step={50} onChange={(v) => { store.settings.setState((s) => { s.maxHistoryChats = v }); upd('maxHistoryChats') }} value={store.settings.state.maxHistoryChats} tooltip={{ zIndex: 2210, arrow: false }} /></div>
           </Form.Item>
         </Form>
       </div>
-      <div className={'mt-5'}>
-        <Collapse
-          size={'small'}
-          items={[
-            {
-              key: 'more',
-              label: t('model.more_settings'),
-              children: (
-                <div>
-                  <div className={'text-xs text-gray-500 mb-5 text-center'}>
-                    {t('model.advanced_settings_tip')}
+      <div className="mt-5">
+        <Collapse size="small" items={[{
+          key: 'more', label: 'Sampling Parameters',
+          children: (<div><div className="text-xs text-gray-500 mb-5 text-center">Fine-tune model output behavior</div>
+            <Form layout="horizontal" className="w-full" labelAlign="left" size="small" labelCol={{ span: 14 }}>
+              {[{ l: 'Temperature', k: 'temperature', mn: 0, mx: 2, st: 0.1, t: 'Controls randomness' },
+                { l: 'Top P', k: 'top_p', mn: 0, mx: 1, st: 0.1, t: 'Nucleus sampling' },
+                { l: 'Presence Penalty', k: 'presence_penalty', mn: -2, mx: 2, st: 0.1, t: 'Penalizes repeated tokens' },
+                { l: 'Frequency Penalty', k: 'frequency_penalty', mn: -2, mx: 2, st: 0.1, t: 'Penalizes frequent tokens' },
+              ].map(({ l, k, mn, mx, st, t }) => (
+                <Form.Item key={k} label={l} tooltip={{ title: t, styles: { root: { zIndex: 2210 } } }}>
+                  <div className="flex items-center">
+                    <Slider min={mn} max={mx} value={(store.settings.state.modelOptions as any)[k].value} step={st} style={{ width: '120px' }} tooltip={{ zIndex: 2210 }}
+                      onChange={(v) => { store.settings.setState((s) => { (s.modelOptions as any)[k].value = v }); upd('modelOptions') }} />
+                    <div className="ml-5"><Checkbox checked={(store.settings.state.modelOptions as any)[k].enable}
+                      onChange={(e) => { store.settings.setState((s) => { (s.modelOptions as any)[k].enable = e.target.checked }); upd('modelOptions') }} /></div>
                   </div>
-                  <Form
-                    layout={'horizontal'}
-                    className={'w-full'}
-                    labelAlign={'left'}
-                    size={'small'}
-                    labelCol={{ span: 14 }}
-                  >
-                    <Form.Item
-                      label={t('model.creativity') + ' (temperature)'}
-                      tooltip={{
-                        title: t('model.creativity_help'),
-                        styles: {
-                          root: { zIndex: 2210 }
-                        }
-                      }}
-                    >
-                      <div className={'flex items-center'}>
-                        <Slider
-                          min={0}
-                          max={2}
-                          value={store.settings.state.modelOptions.temperature.value}
-                          step={0.1}
-                          onChange={(value) => {
-                            store.settings.setState((state) => {
-                              state.modelOptions.temperature.value = value
-                            })
-                            updateSettings('modelOptions')
-                          }}
-                          style={{ width: '120px' }}
-                          tooltip={{ zIndex: 2210 }}
-                        />
-                        <div className={'ml-5'}>
-                          <Checkbox
-                            checked={store.settings.state.modelOptions.temperature.enable}
-                            onChange={(e) => {
-                              store.settings.setState((state) => {
-                                state.modelOptions.temperature.enable = e.target.checked
-                              })
-                              updateSettings('modelOptions')
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                    <Form.Item
-                      label={t('model.top_p')}
-                      name={'top_p'}
-                      tooltip={{
-                        title: t('model.top_p_help'),
-                        styles: { root: { zIndex: 2210 } }
-                      }}
-                    >
-                      <div className={'flex items-center'}>
-                        <Slider
-                          min={0}
-                          max={1}
-                          value={store.settings.state.modelOptions.top_p.value}
-                          step={0.1}
-                          style={{ width: '120px' }}
-                          tooltip={{ zIndex: 2210 }}
-                          onChange={(value) => {
-                            store.settings.setState((state) => {
-                              state.modelOptions.top_p.value = value
-                            })
-                            updateSettings('modelOptions')
-                          }}
-                        />
-                        <div className={'ml-5'}>
-                          <Checkbox
-                            checked={store.settings.state.modelOptions.top_p.enable}
-                            onChange={(e) => {
-                              store.settings.setState((state) => {
-                                state.modelOptions.top_p.enable = e.target.checked
-                              })
-                              updateSettings('modelOptions')
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                    <Form.Item
-                      label={t('model.presence_penalty')}
-                      name={'presence_penalty'}
-                      tooltip={{
-                        title: t('model.presence_penalty_help'),
-                        styles: { root: { zIndex: 2210 } }
-                      }}
-                    >
-                      <div className={'flex items-center'}>
-                        <Slider
-                          min={-2}
-                          max={2}
-                          value={store.settings.state.modelOptions.presence_penalty.value}
-                          step={0.1}
-                          onChange={(value) => {
-                            store.settings.setState((state) => {
-                              state.modelOptions.presence_penalty.value = value
-                            })
-                            updateSettings('modelOptions')
-                          }}
-                          style={{ width: '120px' }}
-                          tooltip={{ zIndex: 2210 }}
-                        />
-                        <div className={'ml-5'}>
-                          <Checkbox
-                            checked={store.settings.state.modelOptions.presence_penalty.enable}
-                            onChange={(e) => {
-                              store.settings.setState((state) => {
-                                state.modelOptions.presence_penalty.enable = e.target.checked
-                              })
-                              updateSettings('modelOptions')
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                    <Form.Item
-                      label={t('model.frequency_penalty')}
-                      name={'frequency_penalty'}
-                      tooltip={{
-                        title: t('model.frequency_penalty_help'),
-                        styles: { root: { zIndex: 2210 } }
-                      }}
-                    >
-                      <div className={'flex items-center'}>
-                        <Slider
-                          min={-2}
-                          max={2}
-                          value={store.settings.state.modelOptions.frequency_penalty.value}
-                          step={0.1}
-                          onChange={(value) => {
-                            store.settings.setState((state) => {
-                              state.modelOptions.frequency_penalty.value = value
-                            })
-                            updateSettings('modelOptions')
-                          }}
-                          style={{ width: '120px' }}
-                          tooltip={{ zIndex: 2210 }}
-                        />
-                        <div className={'ml-5'}>
-                          <Checkbox
-                            checked={store.settings.state.modelOptions.frequency_penalty.enable}
-                            onChange={(e) => {
-                              store.settings.setState((state) => {
-                                state.modelOptions.frequency_penalty.enable = e.target.checked
-                              })
-                              updateSettings('modelOptions')
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                  </Form>
-                </div>
-              )
-            }
-          ]}
-        />
+                </Form.Item>
+              ))}
+            </Form></div>),
+        }]} />
       </div>
-
-      <ModalForm
-        open={state.openEdit}
-        id={state.selectedId}
-        onClose={() => {
-          setState({
-            openEdit: false,
-            selectedId: null
-          })
-        }}
-      />
+      <ModalForm open={st().openEdit} id={st().selectedId} onClose={() => setSt({ openEdit: false, selectedId: null })} />
     </div>
   )
 })

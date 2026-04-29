@@ -1,17 +1,17 @@
-import { Store } from './store'
-import { IChat, IMessage, IMessageDoc, IMessageFile, IMessageModel } from 'types/model'
-import { AiClient } from './llm/client'
-import { getTokens } from '../utils/ai'
-import { ClientModel } from './settings'
-import { openAiModels } from './llm/data/data'
 import { escapeBrackets, escapeMhchem, fixMarkdownBold } from '@/ui/markdown/utils'
-import { StructStore } from './struct'
 import { nid } from '@/utils/common'
 import { observable, runInAction, toJS } from 'mobx'
-import { withReact } from 'slate-react'
-import { withHistory } from 'slate-history'
-import { createEditor } from 'slate'
 import { Subject } from 'rxjs'
+import { createEditor } from 'slate'
+import { withHistory } from 'slate-history'
+import { withReact } from 'slate-react'
+import { IChat, IMessage, IMessageDoc, IMessageFile, IMessageModel } from 'types/model'
+import { getTokens } from '../utils/ai'
+import { AiClient } from './llm/client'
+import { openAiModels } from './llm/data/data'
+import { ClientModel } from './settings'
+import { Store } from './store'
+import { StructStore } from './struct'
 
 const state = {
   chats: [] as IChat[],
@@ -351,12 +351,98 @@ export class ChatStore extends StructStore<typeof state> {
     const sendMessages = await this.getHistoryMessages(this.state.activeChat!)
     this.startCompletion(activeChat, sendMessages)
   }
-  private async startCompletion(activeChat: IChat, sendMessages: IMessageModel[]) {
+  /** Parse tool call JSON from AI response content.
+   *  Handles: embedded text, single quotes, code blocks, markdown wrapping. */
+  private parseToolCalls(content: string): { tool: string; arguments: Record<string, any> }[] {
+    // Normalize single quotes to double quotes for JSON parsing
+    const normalize = (s: string) => s.replace(/'/g, '"').replace(/(\w+):/g, '"$1":')
+
+    const candidates: string[] = []
+
+    // 1. Try to find a JSON array anywhere in the text: [...]
+    const arrayMatch = content.match(/\[[\s\S]*?\]/)
+    if (arrayMatch) candidates.push(arrayMatch[0])
+
+    // 2. Try markdown code blocks (```json ... ```)
+    const codeBlockMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/)
+    if (codeBlockMatch) candidates.push(codeBlockMatch[1])
+
+    // Try each candidate
+    for (const raw of candidates) {
+      // Try as-is first
+      try {
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed)) {
+          const tools = parsed.filter(
+            (item: any) => item?.type === 'tool' && item?.tool && item?.arguments
+          )
+          if (tools.length) return tools
+        }
+      } catch {
+        // Fall through to normalized version
+      }
+      // Try with normalized quotes
+      try {
+        const parsed = JSON.parse(normalize(raw))
+        if (Array.isArray(parsed)) {
+          const tools = parsed.filter(
+            (item: any) => item?.type === 'tool' && item?.tool && item?.arguments
+          )
+          if (tools.length) return tools
+        }
+      } catch {
+        // Not valid — try next candidate
+      }
+    }
+    return []
+  }
+
+  /** Execute a single MCP tool call via window.mcp */
+  private async executeToolCall(
+    tool: string,
+    args: Record<string, any>
+  ): Promise<{ tool: string; result: string; error?: string }> {
+    try {
+      const mcp = window.mcp
+      let result: any
+      switch (tool) {
+        case 'vault_read':
+          result = await mcp.read(args.path)
+          break
+        case 'vault_write':
+          await mcp.write(args.path, args.content)
+          result = `Successfully wrote to ${args.path}`
+          break
+        case 'vault_search':
+          result = await mcp.search(args.query, args.limit)
+          break
+        case 'vault_list':
+          result = await mcp.list(args.path)
+          break
+        case 'vault_summarize':
+          result = await mcp.summarize(args.path)
+          break
+        case 'vault_batch_tag':
+          await mcp.batchTag(args.tag, args.pattern)
+          result = `Successfully applied tag "${args.tag}" to files matching "${args.pattern}"`
+          break
+        default:
+          return { tool, result: '', error: `Unknown tool: ${tool}` }
+      }
+      const resultStr = typeof result === 'string' ? result : JSON.stringify(result, null, 2)
+      return { tool, result: resultStr }
+    } catch (err: any) {
+      return { tool, result: '', error: err?.message || String(err) }
+    }
+  }
+
+  private async startCompletion(activeChat: IChat, sendMessages: IMessageModel[], toolRound = 0) {
     const controller = new AbortController()
     this.chatAbort.set(activeChat.id, controller)
     const startTime = Date.now()
     let lastUpdate = Date.now()
     const modelOptions = this.store.settings.state.modelOptions
+    const maxToolRounds = 8
     this.activeClient!.completionStream(sendMessages, {
       enable_search: activeChat.websearch,
       modelOptions: {
@@ -427,11 +513,56 @@ export class ChatStore extends StructStore<typeof state> {
         })
         this.refresh()
       },
-      onFinish: (content: string = '') => {
-        console.log('onFinish', content)
+      onFinish: async (content: string = '') => {
+        console.log('onFinish', content, 'toolRound', toolRound)
+        const toolCalls = this.parseToolCalls(content)
+
+        // If tool calls detected and under max rounds, execute and loop back
+        if (toolCalls.length > 0 && toolRound < maxToolRounds) {
+          // Show tool usage in the message
+          const toolNames = toolCalls.map((tc) => tc.tool).join(', ')
+          this.setState((state) => {
+            const msg = state.activeChat!.messages![state.activeChat!.messages!.length - 1]
+            msg.content = `🔧 Using tools: ${toolNames}...`
+          })
+
+          // Execute all tool calls in parallel
+          const results = await Promise.all(
+            toolCalls.map((tc) => this.executeToolCall(tc.tool, tc.arguments))
+          )
+
+          // Build tool result messages
+          const toolResultParts = results
+            .map((r) => {
+              if (r.error) {
+                return `Tool "${r.tool}" error: ${r.error}`
+              }
+              return `Tool "${r.tool}" result:\n${r.result}`
+            })
+            .join('\n\n')
+
+          const updatedMessages: IMessageModel[] = [
+            ...sendMessages,
+            { role: 'assistant', content },
+            {
+              role: 'user',
+              content: `[Tool Results]\n${toolResultParts}\n\nBased on the above tool results, provide your answer to the user. If you need to call more tools, respond with another tool call JSON.`
+            }
+          ]
+
+          // Continue the conversation with tool results (recursive but not overlapping)
+          this.startCompletion(activeChat, updatedMessages, toolRound + 1)
+          return
+        }
+
+        // Max tool rounds reached but still returning tool calls
+        if (toolCalls.length > 0 && toolRound >= maxToolRounds) {
+          content =
+            'I reached the maximum number of tool call rounds. Here is what I found so far. Please try a more specific query if needed.'
+        }
+
         const now = Date.now()
         this.chatAbort.delete(activeChat.id)
-        // 如果是首个message需要获取topic
         this.setState((state) => {
           const tokens = getTokens(content)
           const msg = state.activeChat!.messages![state.activeChat!.messages!.length - 1]
@@ -558,10 +689,21 @@ export class ChatStore extends StructStore<typeof state> {
         acc.push(data)
         return acc
       }, [] as IMessageModel[])
-    let prompt = 'You are an AI assistant, please answer in the language used by the user'
-    // if (summaryText) {
-    //   prompt = `${prompt}\n[Conversation History Summary Reference]:\n ${summaryText}`
-    // }
+    let prompt = `You are an AI assistant integrated with the Marksmith document management system. You have access to the uDos ecosystem via the **Hivemind Orchestrator** (MCP-based agent swarm). The following tools are available:
+
+1. **vault_read(path)** — Read the contents of a file in the vault. Path is relative to the vault root.
+2. **vault_write(path, content)** — Write or overwrite a file in the vault with the given content. Path is relative to the vault root.
+3. **vault_search(query, limit?)** — Search the vault for documents matching the query. Returns relevant document snippets. Optional limit (default 10).
+4. **vault_list(path)** — List files and directories at a given path in the vault.
+5. **vault_summarize(path)** — Summarize the contents of a file in the vault.
+6. **vault_batch_tag(tag, pattern)** — Apply a tag to all files matching a glob pattern in the vault.
+
+These vault tools are routed through Hivemind, which also connects to **OpenRouter** (multi-model LLM access) and can coordinate swarm tasks across multiple agents. Hivemind provides API budget control, model routing, and orchestration.
+
+When the user asks you to do something involving their documents, notes, vault, or anything requiring external access, use the tools by outputting ONLY a JSON array of tool calls in this exact format (no extra text, no markdown):
+[{ "type": "tool", "tool": "tool_name", "arguments": { "arg1": "value1" } }]
+
+You can call multiple tools at once by including multiple objects in the array. After the tool results are provided, respond to the user naturally. Answer in the language used by the user.`
 
     newMessages.unshift({
       role: 'system',

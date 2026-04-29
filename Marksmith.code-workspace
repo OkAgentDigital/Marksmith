@@ -1,35 +1,129 @@
 {
   "folders": [
     {
+      "name": "📱 Marksmith",
       "path": "."
     },
     {
+      "name": "🧩 OkAgentDigital",
       "path": "../OkAgentDigital"
+    },
+    {
+      "name": "🧰 DevStudio",
+      "path": "../OkAgentDigital/DevStudio"
+    },
+    {
+      "name": "🔌 MCP Server",
+      "path": "../OkAgentDigital/mcp_server"
+    },
+    {
+      "name": "📦 MCP Client (Rust)",
+      "path": "../OkAgentDigital/mcp-client-rs"
+    },
+    {
+      "name": "🔗 MCP Client (JS)",
+      "path": "../OkAgentDigital/mcp_client"
+    },
+    {
+      "name": "🎨 ThinUI",
+      "path": "../OkAgentDigital/ThinUI"
     }
   ],
   "settings": {
+    // ── Marksmith Workspace ────────────────────────────────────────────────
+    // Electron-based markdown editor with MCP integration via Hivemind
+    //
+    // Architecture:
+    //   Marksmith → Hivemind (~/.uds/hivemind.sock) → Re3Engine, OpenRouter
+    //   DevStudio (VS Code) → Hivemind → Cline, DeepSeek, Swarm
+
+    // === DevStudio Extension Integration ===
+    "devstudio.agentPanel.enabled": true,
+    "devstudio.surfaces.default": "thinui",
+    "devstudio.terminal.name": "uDos Console",
+    "devstudio.mcp.autoConnect": true,
+    "devstudio.teletext.defaultPage": 101,
+    "devstudio.hivemind.socketPath": "~/.uds/hivemind.sock",
+    "devstudio.deepseek.model": "deepseek-chat",
+
+    // === Workspace Layout ===
+    "workbench.editor.showTabs": "multiple",
+    "workbench.editor.wrapTabs": true,
+    "workbench.sideBar.location": "left",
+    "workbench.activityBar.location": "default",
+    "workbench.statusBar.visible": true,
+    "workbench.startupEditor": "none",
+    "workbench.iconTheme": "vs-seti",
+    "workbench.colorTheme": "Dark Modern",
+
+    // === Editor ===
+    "editor.fontFamily": "'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'Fira Code', monospace",
+    "editor.fontSize": 13,
+    "editor.lineHeight": 22,
+    "editor.minimap.enabled": false,
+    "editor.stickyScroll.enabled": true,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit"
-    },
+    "editor.smoothScrolling": true,
+    "editor.cursorBlinking": "phase",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
     "editor.renderWhitespace": "boundary",
-    "editor.rulers": [100],
+    "editor.rulers": [80, 100, 120],
+    "editor.renderLineHighlight": "all",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    // === Terminal ===
+    "terminal.integrated.fontFamily": "'SF Mono', 'Cascadia Code', 'JetBrains Mono', monospace",
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.lineHeight": 1.4,
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.defaultLocation": "editor",
+    "terminal.integrated.persistentSessionReviveProcess": "never",
+
+    // === Files ===
     "files.encoding": "utf8",
     "files.eol": "\n",
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.exclude": {
       "**/.git": true,
       "**/.DS_Store": true,
       "**/node_modules": true,
+      "**/__pycache__": true,
+      "**/.venv": true,
+      "**/*.pyc": true,
       "dist": true,
       "out": true
     },
+
+    // === Explorer ===
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.compactFolders": false,
+    "explorer.sortOrder": "type",
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+      "*.ts": "${capture}.js, ${capture}.js.map, ${capture}.d.ts, ${capture}.d.ts.map",
+      "tsconfig.json": "tsconfig.*.json",
+      "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
+      "*.yaml": "${capture}.yml",
+      "Makefile": "Makefile.*",
+      "*.sh": "${capture}.bat"
+    },
+
+    // === Search ===
     "search.exclude": {
       "**/node_modules": true,
-      "dist": true,
-      "out": true,
+      "**/dist": true,
+      "**/out": true,
+      "**/__pycache__": true,
       "pnpm-lock.yaml": true
     },
 
@@ -58,10 +152,7 @@
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
 
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    "typescript.suggest.autoImports": true,
-    "javascript.suggest.autoImports": true,
-
+    // === Tailwind CSS ===
     "tailwindCSS.includeLanguages": {
       "html": "html",
       "javascript": "javascript",
@@ -71,17 +162,82 @@
     "tailwindCSS.emmetCompletions": true,
     "tailwindCSS.classAttributes": ["class", "className"],
 
+    // === ESLint ===
     "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
 
+    // === Package Manager ===
     "npm.packageManager": "pnpm",
     "typescript.tsdk": "node_modules/typescript/lib",
 
-    "workbench.colorTheme": "Dark Modern",
-    "workbench.iconTheme": "vs-seti",
+    // === MCP ===
+    "mcp.enabled": true,
+    "mcp.serverGroups": [
+      {
+        "name": "Marksmith MCP",
+        "servers": ["shared-mcp", "udos-core", "devstudio-mcp", "teletext"]
+      }
+    ],
+
+    // === Git ===
+    "git.enabled": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.mergeEditor": true,
+    "git.branchProtection": ["main", "master"],
+
+    // === Debug ===
+    "debug.showBreakpointsOnTop": true,
+    "debug.toolBarLocation": "floating",
+    "debug.internalConsoleOptions": "openOnSessionStart",
+
+    // === TypeScript / Node ===
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.suggest.autoImports": true,
+    "typescript.suggest.completeFunctionCalls": true,
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.quoteStyle": "single",
+    "javascript.suggest.autoImports": true,
 
     "debug.javascript.terminalOptions": {
       "skipFiles": ["<node_internals>/**"]
-    }
+    },
+
+    // === YAML ===
+    "[yaml]": {
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2
+    },
+
+    // === JSON ===
+    "[json]": {
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2
+    },
+
+    // === Markdown ===
+    "[markdown]": {
+      "editor.wordWrap": "on",
+      "editor.quickSuggestions": {
+        "comments": "off",
+        "strings": "off",
+        "other": "off"
+      }
+    },
+
+    // === File Associations ===
+    "files.associations": {
+      "*.t42": "plaintext",
+      "*.tti": "plaintext",
+      "*.udoc": "markdown",
+      "*.snack": "json",
+      "*.skill.md": "markdown",
+      "*.agent.md": "markdown",
+      "*.instructions.md": "markdown",
+      "*.prompt.md": "markdown"
+    },
+
+    // === Legacy ===
+    "makefile.configureOnOpen": false
   },
   "extensions": {
     "recommendations": [
@@ -92,7 +248,18 @@
       "eamodio.gitlens",
       "streetsidesoftware.code-spell-checker",
       "tintinweb.vscode-inline-bookmarks",
-      "editorconfig.editorconfig"
+      "editorconfig.editorconfig",
+      "GitHub.copilot",
+      "GitHub.copilot-chat",
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "redhat.vscode-yaml",
+      "yzhang.markdown-all-in-one",
+      "github.vscode-pull-request-github",
+      "aaron-bond.better-comments",
+      "gruntfuggly.todo-tree",
+      "bierner.markdown-mermaid",
+      "christian-kohler.path-intellisense"
     ]
   },
   "launch": {
